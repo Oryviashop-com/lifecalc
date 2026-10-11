@@ -172,7 +172,7 @@ footer{text-align:center;color:var(--mut);padding:30px 18px 40px;font-size:14px}
       <label for="qt" data-i="quote"></label>
       <textarea id="qt" rows="2" maxlength="110" data-p="quotePh"></textarea>
       <div class="row" style="margin-top:16px"><button class="btn" id="png">PNG ⬇</button><button class="btn alt" id="jpg">JPG ⬇</button></div>
-      <p class="mut" data-i="hd"></p>
+      <p class="mut" data-i="hd"></p><button class="btn" id="unl" style="width:100%;margin-top:6px;padding:13px 10px;font-size:16px"></button>
     </div>
   </div>
 </section>
@@ -254,42 +254,32 @@ function draw(cv,k){
   const[W,H]=LAY[st.ly],P=st.th>=10?PT[st.th-10]:null,th=P?[P[0],P[2],P[3],P[4]]:TH[st.th],s=st.birth?stats():{y:0,m:0,d:0,days:0,pct:0,nb:new Date()};
   cv.width=W*k;cv.height=H*k;const c=cv.getContext('2d');c.scale(k,k);
   const g=c.createLinearGradient(0,0,W,H);if(P){g.addColorStop(0,P[0]);g.addColorStop(.5,P[1]);g.addColorStop(1,P[2])}else{g.addColorStop(0,th[0]);g.addColorStop(1,th[1])}c.fillStyle=g;c.fillRect(0,0,W,H);
-  const R=Math.min(W,H);c.globalAlpha=.1;c.fillStyle=th[2];c.beginPath();c.arc(W*.92,H*.08,R*.38,0,7);c.fill();c.beginPath();c.arc(W*.04,H*.96,R*.3,0,7);c.fill();c.globalAlpha=1;
-  const u=H>W?W/1080:H/1080;if(P)fx(c,W,H,R,P,u);const cx=W/2,y0=(H-980*u)/2,ff=P?'"Playfair Display","Tiro Bangla","Noto Serif Bengali",Georgia,serif':'"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif';
+  const R=Math.min(W,H);c.globalAlpha=P?.04:.1;c.fillStyle=th[2];c.beginPath();c.arc(W*.92,H*.08,R*.38,0,7);c.fill();c.beginPath();c.arc(W*.04,H*.96,R*.3,0,7);c.fill();c.globalAlpha=1;
+  const tall=H>W,u=tall?W/1080:H/1080*.92;if(P)fx(c,W,H,R,P,u);const cx=W/2,y0=(H-1060*u)/2,ty=tall?(170*u-y0)/u:40,ny=tall?(H-190*u-y0)/u:985,bry=tall?(H-125*u-y0)/u:1040,ff=P?'"Playfair Display","Tiro Bangla","Noto Serif Bengali",Georgia,serif':'"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif';
   c.textAlign='center';c.textBaseline='alphabetic';
-  const T_=(t,sz,w,y,col,x=cx,a=1)=>{c.font=`${w} ${sz*u}px ${ff}`;c.fillStyle=col;c.globalAlpha=a;if(P&&P[6]){c.shadowColor=P[4];c.shadowBlur=26*u}c.fillText(t,x,y0+y*u);c.shadowBlur=0;c.globalAlpha=1};
-  if(P){c.save();c.strokeStyle=th[3];c.fillStyle=th[3];c.globalAlpha=.75;c.lineWidth=2*u;const oy=y0+78*u;for(const d of[-1,1]){c.beginPath();c.moveTo(cx+d*40*u,oy);c.lineTo(cx+d*300*u,oy);c.stroke()}c.translate(cx,oy);c.rotate(Math.PI/4);c.fillRect(-9*u,-9*u,18*u,18*u);c.restore();c.save();c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.roundRect(cx-440*u,y0+585*u,880*u,200*u,34*u);c.fill();c.globalAlpha=.55;c.strokeStyle=th[3];c.lineWidth=2*u;c.stroke();c.restore()}
-if(P&&st.lang==='en')c.letterSpacing=(12*u)+'px';T_(tr('cT'),34,700,40,th[3]);c.letterSpacing='0px';
-  if(st.name)T_(st.name,60,600,115,th[2]);
+  const SF='"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif',T_=(t,sz,w,y,col,x=cx,a=1,fm=ff)=>{c.font=`${w} ${sz*u}px ${fm}`;c.fillStyle=col;c.globalAlpha=a;if(P&&P[6]){c.shadowColor=P[4];c.shadowBlur=8*u}c.fillText(t,x,y0+y*u);c.shadowBlur=0;c.globalAlpha=1};
+  if(P){c.save();c.strokeStyle=th[3];c.fillStyle=th[3];c.globalAlpha=.75;c.lineWidth=2*u;const oy=y0+(ty+38)*u;for(const d of[-1,1]){c.beginPath();c.moveTo(cx+d*40*u,oy);c.lineTo(cx+d*300*u,oy);c.stroke()}c.translate(cx,oy);c.rotate(Math.PI/4);c.fillRect(-9*u,-9*u,18*u,18*u);c.restore();c.save();c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.roundRect(cx-440*u,y0+585*u,880*u,200*u,34*u);c.fill();c.globalAlpha=.55;c.strokeStyle=th[3];c.lineWidth=2*u;c.stroke();c.restore()}
+if(P&&st.lang==='en')c.letterSpacing=(12*u)+'px';T_(tr('cT'),36,700,ty,th[3]);c.letterSpacing='0px';
+  if(st.name)T_(st.name,40,600,ny,th[2],cx,.9);
   let fg=th[2];if(P){fg=c.createLinearGradient(0,y0+150*u,0,y0+400*u);fg.addColorStop(0,th[2]);fg.addColorStop(1,th[3])}T_(f(s.y),300,700,390,fg);
   T_(tr('y'),58,600,465,th[3]);
-  T_(`${f(s.m)} ${tr('m')} ${f(s.d)} ${tr('d')}`,44,500,535,th[2],cx,.9);
-  T_(f(s.days),72,700,650,th[2],cx-230*u);T_(tr('lived'),30,500,695,th[3],cx-230*u);
-  T_(s.pct.toLocaleString(loc(),{maximumFractionDigits:1})+'%',72,700,650,th[2],cx+230*u);T_(`${tr('of')} ${tr('done')}`,30,500,695,th[3],cx+230*u);
+  T_(`${f(s.m)} ${tr('m')} ${f(s.d)} ${tr('d')}`,52,600,535,th[2],cx,1,SF);
+  T_(f(s.days),72,700,650,th[2],cx-230*u);T_(tr('lived'),32,600,695,th[3],cx-230*u,1,SF);
+  T_(s.pct.toLocaleString(loc(),{maximumFractionDigits:1})+'%',72,700,650,th[2],cx+230*u);T_(`${tr('of')} ${tr('done')}`,32,600,695,th[3],cx+230*u,1,SF);
   const bw=760*u,bx=cx-bw/2,by=y0+735*u,bh=22*u;
   c.globalAlpha=.25;c.fillStyle=th[2];c.beginPath();c.roundRect(bx,by,bw,bh,bh/2);c.fill();c.globalAlpha=1;
   c.fillStyle=th[3];c.beginPath();c.roundRect(bx,by,Math.max(bh,bw*s.pct/100),bh,bh/2);c.fill();
-  T_(`${tr('nbc')}: ${fd(s.nb)}`,38,500,830,th[2],cx,.95);
+  T_(`${tr('nbc')}: ${fd(s.nb)}`,42,600,830,th[2],cx,1,SF);
   const q=$('#qt').value.trim()||tr('dq');c.font=`italic 500 ${42*u}px ${ff}`;c.fillStyle=th[2];
   wrap(c,'“'+q+'”',860*u,2).forEach((l,i)=>{c.globalAlpha=.9;c.fillText(l,cx,y0+905*u+i*56*u);c.globalAlpha=1});
-  T_('Life Calculator • private',26,500,985,th[3],cx,.8);
+  if(!(P&&owned(st.th)))T_('Life Calculator • private',26,500,bry,th[3],cx,.8);
+  if(P&&!owned(st.th))wm(c,W,H,u);
 }
-function drawPrev(){draw($('#cv'),.5)}
-async function exp(type){
-  if(!st.birth)return;const cv=document.createElement('canvas');draw(cv,2);
-  const mime=type==='png'?'image/png':'image/jpeg';
-  cv.toBlob(async b=>{
-    const name=`life-card.${type}`;
-    try{const dl=await window.claude?.use?.('downloads');
-      if(dl){await dl.save({filename:name,data:b});toast(tr('saved'));return}
-    }catch(e){if(e&&e.code==='declined')return;toast(tr('fail'));return}
-    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();toast(tr('saved'));
-  },mime,.95);
-}
+function drawPrev(){draw($('#cv'),.8)}
 $('#png').onclick=()=>exp('png');$('#jpg').onclick=()=>exp('jpg');
 
 
-const PT=[['#2b1a05','#7a5410','#1a1003','#fff4d6','#f5c542','lines',1],['#0b132b','#1c2d5a','#0b132b','#eaf6ff','#7fd6ff','stars',1],['#12002b','#3b0a6e','#05000f','#ffffff','#ff2bd6','stars',1],['#3a1c24','#b76e79','#4a2530','#fff0ee','#ffd0c4','rings',0],['#02221a','#0b6b50','#01110d','#e6fff5','#e3c76b','lines',0],['#021428','#0a7a6a','#3a1d7a','#ffffff','#8bffd9','stars',1],['#050505','#1a1a1f','#000000','#ffffff','#e5e5ea','dots',0],['#2a0008','#8f0f2a','#16000a','#ffe9ec','#ffb3c0','rings',0],['#0a0220','#2a1a6e','#000000','#ffffff','#ffd36b','stars',1],['#ff9a5a','#ff5fa2','#7a5cff','#ffffff','#fff3b0','rings',0]];
+const PT=[['#2b1a05','#7a5410','#1a1003','#fff4d6','#f5c542','lines',1],['#0b132b','#1c2d5a','#0b132b','#eaf6ff','#7fd6ff','stars',1],['#12002b','#3b0a6e','#05000f','#ffffff','#ff2bd6','stars',1],['#3a1c24','#b76e79','#4a2530','#fff0ee','#ffd0c4','rings',0],['#02221a','#0b6b50','#01110d','#e6fff5','#e3c76b','lines',0],['#021428','#0a7a6a','#3a1d7a','#ffffff','#8bffd9','stars',1],['#050505','#1a1a1f','#000000','#ffffff','#e5e5ea','dots',0],['#2a0008','#8f0f2a','#16000a','#ffe9ec','#ffb3c0','rings',0],['#0a0220','#2a1a6e','#000000','#ffffff','#ffd36b','stars',1],['#ff9a5a','#ff5fa2','#7a5cff','#ffffff','#fff3b0','rings',0],['#000000','#1b1405','#000000','#fff3cf','#d4af37','lines',0],['#2a2d34','#7c828d','#1a1c21','#ffffff','#e6e9ee','lines',0],['#021033','#0b3fa8','#010a22','#e8f0ff','#7fb0ff','stars',0],['#1d0a33','#6a2fa3','#12061f','#f6ecff','#d9a8ff','rings',0],['#2b0000','#a30f1f','#140000','#fff1f1','#ffd27a','lines',0],['#1a0b3a','#d4567a','#ff9a62','#ffffff','#ffe3c2','rings',0],['#3b2f22','#a58a5c','#2b2118','#fff7e6','#f3deb0','dots',0],['#cfefff','#8fd0f5','#4a90c8','#06223a','#0b4f85','stars',0],['#12002e','#5a1aa8','#0a0018','#f3e8ff','#c89bff','stars',0],['#1a0a02','#c2571a','#2a0e03','#fff0e3','#ffb27a','lines',0]];
 const PRICE=20,AH='b570ac1227437e67a2c0839524f8abfffea406e9b036153c84dd5c4df9e7c06e';
 Object.assign(T.bn,{PN:['রয়্যাল গোল্ড','ডায়মন্ড','নিয়ন নাইট','রোজ গোল্ড','এমারেল্ড লাক্স','অরোরা','অবসিডিয়ান','স্কারলেট ভেলভেট','কসমিক গ্যালাক্সি','হলো সানরাইজ'],prem:'👑 প্রিমিয়াম • প্রতিটি ৳20',buy:'👑 এই থিম কিনুন ৳20',shopT:'👑 প্রিমিয়াম থিম কিনুন',tot:'মোট',bkL:'বিকাশ নাম্বার (Send Money)',cp:'কপি',cpd:'কপি হয়েছে!',stp:'১) নাম্বারটি কপি করে টাকা পাঠান। ২) নিচে আপনার বিকাশ নাম্বার ও TrxID দিন।',snL:'যে নাম্বার থেকে টাকা পাঠিয়েছেন',trxL:'Trx ID',sub:'অর্ডার জমা দিন',ordOk:'অর্ডার জমা হয়েছে! এডমিন যাচাই করলে থিম আনলক হবে।',ordBad:'১১ ডিজিটের নাম্বার, Trx ID এবং অন্তত একটি থিম দিন।',needDb:'সরাসরি অর্ডার জমা দিতে claude.ai-তে সাইন-ইন লাগবে। এখন অর্ডারের তথ্য কপি হবে — এডমিনকে পাঠান।',uidL:'আপনার ID (এডমিনকে দিন)',wrong:'ভুল পাসওয়ার্ড',calcFirst:'আগে হিসাব করুন',imgT:'কার্ড তৈরি!',imgH:'ছবিটি চেপে ধরে “Save to Photos / ছবি সংরক্ষণ” দিন, অথবা নিচের বাটন ব্যবহার করুন।',shr:'📲 শেয়ার / গ্যালারিতে সেভ',dl:'⬇ ডাউনলোড',noShare:'এই ডিভাইসে শেয়ার নেই — ছবিটি চেপে ধরে সেভ করুন',own:'আনলকড'});
 Object.assign(T.en,{PN:['Royal Gold','Diamond','Neon Night','Rose Gold','Emerald Luxe','Aurora','Obsidian','Scarlet Velvet','Cosmic Galaxy','Holo Sunrise'],prem:'👑 Premium • ৳20 each',buy:'👑 Buy this theme ৳20',shopT:'👑 Buy premium themes',tot:'Total',bkL:'bKash number (Send Money)',cp:'Copy',cpd:'Copied!',stp:'1) Copy the number and send money. 2) Enter your bKash number & TrxID below.',snL:'Number you sent money from',trxL:'Trx ID',sub:'Submit order',ordOk:'Order submitted! Themes unlock once the admin verifies.',ordBad:'Enter an 11-digit number, a Trx ID and at least one theme.',needDb:'Direct orders need a claude.ai sign-in. Order details will be copied — send them to the admin.',uidL:'Your ID (give to admin)',wrong:'Wrong password',calcFirst:'Calculate first',imgT:'Card ready!',imgH:'Press and hold the image and choose “Save to Photos”, or use the buttons below.',shr:'📲 Share / Save to gallery',dl:'⬇ Download',noShare:'Sharing unavailable — press and hold the image to save',own:'Unlocked'});
@@ -298,9 +288,9 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const owned=i=>i<10||st.admin||st.premium;
 function rnd(a){return()=>(a=(a*16807)%2147483647)/2147483647}
 function fx(c,W,H,R,P,u){const ac=P[4],r=rnd(7+W),p=P[5];c.save();
- let g=c.createRadialGradient(W*.5,H*.18,0,W*.5,H*.18,R*.9);g.addColorStop(0,ac);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.28;c.fillStyle=g;c.fillRect(0,0,W,H);
- g=c.createRadialGradient(W*.1,H*.92,0,W*.1,H*.92,R*.7);g.addColorStop(0,P[1]);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.5;c.fillStyle=g;c.fillRect(0,0,W,H);
- g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.45,'rgba(255,255,255,.16)');g.addColorStop(.55,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,.07)');c.globalAlpha=1;c.fillStyle=g;c.fillRect(0,0,W,H);
+ let g=c.createRadialGradient(W*.5,H*.18,0,W*.5,H*.18,R*.9);g.addColorStop(0,ac);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.13;c.fillStyle=g;c.fillRect(0,0,W,H);
+ g=c.createRadialGradient(W*.1,H*.92,0,W*.1,H*.92,R*.7);g.addColorStop(0,P[1]);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.35;c.fillStyle=g;c.fillRect(0,0,W,H);
+ g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.45,'rgba(255,255,255,.07)');g.addColorStop(.55,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,.03)');c.globalAlpha=1;c.fillStyle=g;c.fillRect(0,0,W,H);
  c.strokeStyle=ac;c.fillStyle=ac;
  if(p==='lines'){c.globalAlpha=.07;c.lineWidth=2*u;for(let i=-H;i<W;i+=40*u){c.beginPath();c.moveTo(i,0);c.lineTo(i+H,H);c.stroke()}}
  if(p==='rings'){c.globalAlpha=.16;c.lineWidth=2*u;for(let i=1;i<=7;i++){c.beginPath();c.arc(W*.95,H*.05,i*R*.13,0,7);c.stroke();c.beginPath();c.arc(W*.05,H*.95,i*R*.1,0,7);c.stroke()}}
@@ -322,6 +312,14 @@ async function cpy(t){try{await navigator.clipboard.writeText(t)}catch(e){const 
 
 Object.assign(T.bn,{prem:'👑 প্রিমিয়াম • ১০টি থিম একসাথে মাত্র ৳২০',buy:'👑 ১০টি প্রিমিয়াম থিম আনলক ৳২০',shopT:'👑 সব প্রিমিয়াম থিম আনলক',all10:'১০টি থিম • একবার কিনলেই সব',login:'লগইন',signup:'সাইন আপ',nm:'আপনার নাম',idL:'মোবাইল নাম্বার অথবা ইমেইল',pw:'পাসওয়ার্ড (কমপক্ষে ৬)',logout:'লগআউট',noAcc:'অ্যাকাউন্ট নেই? সাইন আপ করুন',haveAcc:'অ্যাকাউন্ট আছে? লগইন করুন',needLogin:'আগে লগইন করুন',fbErr:'সমস্যা হয়েছে',acc:'আমার অ্যাকাউন্ট',stm:{pending:'অপেক্ষমাণ',approved:'অনুমোদিত',rejected:'বাতিল'},ordSt:'অর্ডারের অবস্থা',prm:'প্রিমিয়াম সক্রিয় ✓',ordOk:'অর্ডার জমা হয়েছে! এডমিন যাচাই করলে সব থিম আনলক হবে।'});
 Object.assign(T.en,{prem:'👑 Premium • all 10 themes for just ৳20',buy:'👑 Unlock all 10 premium themes ৳20',shopT:'👑 Unlock all premium themes',all10:'10 themes • buy once, get all',login:'Login',signup:'Sign up',nm:'Your name',idL:'Mobile number or email',pw:'Password (min 6)',logout:'Logout',noAcc:'No account? Sign up',haveAcc:'Have an account? Login',needLogin:'Please login first',fbErr:'Something went wrong',acc:'My account',stm:{pending:'Pending',approved:'Approved',rejected:'Rejected'},ordSt:'Order status',prm:'Premium active ✓',ordOk:'Order submitted! All themes unlock once the admin verifies.'});
+Object.assign(T.bn,{namePh:'যেমন: দাহিয়া মোস্তফা',prem:'👑 প্রিমিয়াম • ২০টি থিম একসাথে মাত্র ৳২০ (আজীবন)',buy:'👑 ২০টি প্রিমিয়াম থিম আনলক ৳২০',all10:'২০টি থিম • একবার কিনলেই আজীবন সব',unl:'👑 প্রিমিয়াম থিম আনলক করুন — ৳২০ (আজীবন)',PN:['রয়্যাল গোল্ড','ডায়মন্ড','নিয়ন নাইট','রোজ গোল্ড','এমারেল্ড লাক্স','অরোরা','অবসিডিয়ান','স্কারলেট ভেলভেট','কসমিক গ্যালাক্সি','হলো সানরাইজ','অনিক্স গোল্ড','প্ল্যাটিনাম','স্যাফায়ার','অ্যামেথিস্ট','ক্রিমসন ক্রাউন','টুইলাইট','শ্যাম্পেন','আইস ক্রিস্টাল','ইম্পেরিয়াল পার্পল','কপার ফ্লেম']});
+Object.assign(T.en,{namePh:'e.g. Dahia Mostofa',prem:'👑 Premium • all 20 themes for just ৳20 (lifetime)',buy:'👑 Unlock all 20 premium themes ৳20',all10:'20 themes • buy once, lifetime access',unl:'👑 Unlock premium themes — ৳20 (lifetime)',PN:['Royal Gold','Diamond','Neon Night','Rose Gold','Emerald Luxe','Aurora','Obsidian','Scarlet Velvet','Cosmic Galaxy','Holo Sunrise','Onyx Gold','Platinum','Sapphire','Amethyst','Crimson Crown','Twilight','Champagne','Ice Crystal','Imperial Purple','Copper Flame']});
+const eye=id=>`<div style="position:relative"><input id="${id}" type="password" style="padding-right:50px"><button type="button" data-eye="${id}" aria-label="show password" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:20px;cursor:pointer;padding:6px">👁</button></div>`;
+function bindEye(){document.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=$('#'+b.dataset.eye);i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'👁':'🙈'})}
+function wm(c,W,H,u){c.save();c.translate(W/2,H/2);c.rotate(-Math.PI/6);c.textAlign='center';c.textBaseline='middle';c.font=`700 ${120*u}px "Playfair Display",Georgia,serif`;c.lineWidth=3*u;c.strokeStyle='rgba(0,0,0,.3)';c.fillStyle='rgba(255,255,255,.32)';for(let i=-2;i<=2;i++){c.strokeText('Life Calculator',0,i*300*u);c.fillText('Life Calculator',0,i*300*u)}c.restore()}
+function unlBtn(){const b=$('#unl');b.textContent=tr('unl');b.classList.toggle('hide',!!st.premium||!!st.admin)}
+$('#unl').onclick=()=>openShop();
+const _bs=buildStudioUI;buildStudioUI=function(){_bs();unlBtn()};
 const FB={apiKey:"AIzaSyBywVa7AbxmfmbmI4n5nySE3LiaG6GVKvw",authDomain:"life-calculator-69835.firebaseapp.com",projectId:"life-calculator-69835",storageBucket:"life-calculator-69835.firebasestorage.app",messagingSenderId:"791620560110",appId:"1:791620560110:web:e76d7a0141b1d3c5577fff"};
 let auth=null,fs=null,unU=null;
 try{firebase.initializeApp(FB);auth=firebase.auth();fs=firebase.firestore()}catch(e){console.error(e)}
@@ -331,14 +329,14 @@ au.onclick=()=>st.user?openAcc():openAuth('in');
 function hdr(){au.textContent=st.user?'👤 '+((st.user.displayName||'').split(' ')[0]||'ID'):tr('login')}
 const _al=applyLang;applyLang=function(){_al();hdr()};
 function openAuth(mode){
-  openM(`<h2>${mode==='in'?tr('login'):tr('signup')}</h2>${mode==='up'?`<label>${tr('nm')}</label><input id="an" maxlength="30">`:''}<label style="margin-top:10px">${tr('idL')}</label><input id="ai" autocapitalize="none" placeholder="01XXXXXXXXX / name@mail.com"><label style="margin-top:10px">${tr('pw')}</label><input id="ap2" type="password"><div class="err" id="ae"></div><button class="btn" id="ago" style="width:100%">${mode==='in'?tr('login'):tr('signup')}</button><p style="text-align:center"><a id="sw2" style="color:var(--br);font-weight:700;cursor:pointer">${mode==='in'?tr('noAcc'):tr('haveAcc')}</a></p>`);
-  $('#sw2').onclick=()=>openAuth(mode==='in'?'up':'in');
+  openM(`<h2>${mode==='in'?tr('login'):tr('signup')}</h2>${mode==='up'?`<label>${tr('nm')}</label><input id="an" maxlength="30">`:''}<label style="margin-top:10px">${tr('idL')}</label><input id="ai" autocapitalize="none" placeholder="01XXXXXXXXX / name@mail.com"><label style="margin-top:10px">${tr('pw')}</label>${eye('ap2')}<div class="err" id="ae"></div><button class="btn" id="ago" style="width:100%">${mode==='in'?tr('login'):tr('signup')}</button><p style="text-align:center"><a id="sw2" style="color:var(--br);font-weight:700;cursor:pointer">${mode==='in'?tr('noAcc'):tr('haveAcc')}</a></p>`);
+  bindEye();$('#sw2').onclick=()=>openAuth(mode==='in'?'up':'in');
   $('#ago').onclick=async()=>{const id=$('#ai').value,pw=$('#ap2').value,em=emailOf(id),nm=mode==='up'?$('#an').value.trim():'';
     if(!auth){$('#ae').textContent=tr('fbErr');return}
     if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<6||(mode==='up'&&!nm)){$('#ae').textContent=tr('ordBad');return}
     try{if(mode==='up'){const c=await auth.createUserWithEmailAndPassword(em,pw);await c.user.updateProfile({displayName:nm});await fs.doc('users/'+c.user.uid).set({name:nm,login:id.trim(),premium:false,at:Date.now()})}else await auth.signInWithEmailAndPassword(em,pw);closeM()}catch(e){$('#ae').textContent=tr('fbErr')+' ('+(e.code||e.message)+')'}};
 }
-function openAcc(){openM(`<h2>${tr('acc')}</h2><p><b>${esc(st.user.displayName)}</b><br><span class="mut">${esc((st.user.email||'').replace('@phone.lifecalc.app',''))}</span></p><p>${st.premium?tr('prm'):''}</p><button class="btn alt" id="lo" style="width:100%">${tr('logout')}</button>`);$('#lo').onclick=async()=>{await auth.signOut();closeM()}}
+function openAcc(){openM(`<h2>${tr('acc')}</h2><p><b>${esc(st.user.displayName)}</b><br><span class="mut">${esc((st.user.email||'').replace('@phone.lifecalc.app',''))}</span></p><p>${st.premium?tr('prm'):''}</p><button class="btn alt" id="lo" style="width:100%">${tr('logout')}</button>`);$('#lo').onclick=async()=>{await auth.signOut();st.admin=false;buildStudioUI();closeM()}}
 if(auth){auth.onAuthStateChanged(u=>{st.user=u;st.premium=false;if(unU){unU();unU=null}hdr();buildStudioUI();if(u&&fs)unU=fs.doc('users/'+u.uid).onSnapshot(sn=>{st.premium=!!(sn.exists&&sn.data().premium);buildStudioUI()},()=>{})});
   fs.doc('settings/pay').onSnapshot(sn=>{if(sn.exists)st.bk=String(sn.data().bkash||'')},()=>{})}
 hdr();
@@ -362,9 +360,17 @@ async function openShop(){
 async function sha(x){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(x));return[...new Uint8Array(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}
 function openAdmin(){
   if(st.admin)return adminPanel();
-  openM(`<h2>🔐 এডমিন লগইন</h2><input type="password" id="ap" placeholder="পাসওয়ার্ড"><div class="err" id="ae"></div><button class="btn" id="al" style="width:100%">প্রবেশ করুন</button>`);
-  const go=async()=>{let ok=false;try{ok=await sha($('#ap').value)===AH}catch(e){}if(ok){st.admin=true;buildStudioUI();adminPanel()}else $('#ae').textContent=tr('wrong')};
-  $('#al').onclick=go;$('#ap').onkeydown=e=>{if(e.key==='Enter')go()};$('#ap').focus();
+  const em=st.user&&st.user.email&&!st.user.email.endsWith('@phone.lifecalc.app')?st.user.email:'';
+  openM(`<h2>🔐 এডমিন লগইন</h2><label>এডমিন ইমেইল</label><input id="ae1" type="email" autocapitalize="none" value="${esc(em)}"><label style="margin-top:10px">পাসওয়ার্ড</label>${eye('ap')}<div class="err" id="ae"></div><button class="btn" id="al" style="width:100%">প্রবেশ করুন</button>`);
+  bindEye();
+  const go=async()=>{
+    if(!auth){$('#ae').textContent=tr('fbErr');return}
+    try{const c=await auth.signInWithEmailAndPassword($('#ae1').value.trim().toLowerCase(),$('#ap').value);
+      const d=await fs.doc('admins/'+c.user.uid).get();
+      if(!d.exists){$('#ae').innerHTML='এই অ্যাকাউন্ট এডমিন নয়। Firestore-এ <b>admins</b> কালেকশনে নিচের ID দিয়ে ডকুমেন্ট বানান:<br><b style="word-break:break-all">'+esc(c.user.uid)+'</b>';return}
+      st.admin=true;buildStudioUI();adminPanel()}
+    catch(e){$('#ae').textContent=tr('wrong')+' ('+(e.code||e.message)+')'}};
+  $('#al').onclick=go;$('#ap').onkeydown=e=>{if(e.key==='Enter')go()};
 }
 async function adminPanel(){
   openM(`<h2>⚙️ এডমিন প্যানেল</h2>${st.user?'':'<div class="err">অর্ডার দেখতে/অনুমোদন দিতে আপনার এডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।</div>'}
@@ -375,7 +381,7 @@ async function adminPanel(){
   $('#asv').onclick=()=>run(async()=>{await fs.doc('settings/pay').set({bkash:$('#ab').value.trim()});st.bk=$('#ab').value.trim()});
   $('#ga').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:true},{merge:true}));
   $('#gr').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:false},{merge:true}));
-  async function load(){try{const q=await fs.collection('orders').orderBy('at','desc').limit(100).get(),ds=q.docs.map(d=>d.data());
+  async function load(){try{const q=await fs.collection('orders').limit(100).get(),ds=q.docs.map(d=>d.data()).sort((a,b)=>(b.at||0)-(a.at||0));
     $('#ol').innerHTML=ds.length?ds.map(o=>`<div class="od"><b>${esc(o.name)||'—'}</b> • ৳${o.total} • <b>${esc(o.status)}</b><br>নাম্বার: ${esc(o.sender)} • Trx: <b>${esc(o.trx)}</b><br>UID: ${esc(o.uid)}<div class="row" style="margin-top:8px"><button class="sm ok" data-a="ok" data-u="${esc(o.uid)}">অনুমোদন</button><button class="sm no" data-a="no" data-u="${esc(o.uid)}">বাতিল</button></div></div>`).join(''):'কোনো অর্ডার নেই'}catch(e){$('#ol').textContent=(e.code||e.message)}}
   $('#ol').onclick=e=>{const b=e.target.closest('button');if(!b)return;const u=b.dataset.u;run(async()=>{if(b.dataset.a==='ok'){await fs.doc('users/'+u).set({premium:true},{merge:true});await fs.doc('orders/'+u).update({status:'approved'})}else{await fs.doc('users/'+u).set({premium:false},{merge:true});await fs.doc('orders/'+u).update({status:'rejected'})}load()})};
   if(fs)load();
@@ -384,18 +390,18 @@ $('#mbk').onclick=openAdmin;$('#mbk').onkeydown=e=>{if(e.key==='Enter')openAdmin
 
 async function exp(type){
   if(!st.birth)return toast(tr('calcFirst'));
-  if(!owned(st.th))return openShop();
-  const cv=document.createElement('canvas');draw(cv,2);const mime=type==='png'?'image/png':'image/jpeg',name=`life-card.${type}`;
-  cv.toBlob(b=>{const url=URL.createObjectURL(b),fl=new File([b],name,{type:mime});
-    openM(`<h2>✅ ${tr('imgT')}</h2><p class="mut">${tr('imgH')}</p><img class="ex" alt="card" src="${url}"><div class="row"><button class="btn" id="sh">${tr('shr')}</button><button class="btn alt" id="dl">${tr('dl')}</button></div>`);
+  try{for(const w of[500,600,700])await document.fonts.load(`${w} 40px "Hind Siliguri"`,'আ০১২৩৪৫৬৭৮৯');await document.fonts.ready}catch(e){}
+    const cv=document.createElement('canvas');draw(cv,2);const mime=type==='png'?'image/png':'image/jpeg',name=`life-card.${type}`;
+  cv.toBlob(b=>{const rd=new FileReader();rd.onload=()=>{const du=rd.result,url=URL.createObjectURL(b),fl=new File([b],name,{type:mime});
+    openM(`<h2>✅ ${tr('imgT')}</h2><p class="mut">${tr('imgH')}</p><img class="ex" alt="card" src="${du}"><div class="row"><button class="btn" id="sh">${tr('shr')}</button><button class="btn alt" id="dl">${tr('dl')}</button></div>`);
     $('#sh').onclick=async()=>{try{if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl]});return}}catch(e){if(e&&e.name==='AbortError')return}toast(tr('noShare'))};
     $('#dl').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()};
-  },mime,.95);
+  };rd.readAsDataURL(b)},mime,.95);
 }
 st.lang=load('lc-lang')||'bn';
 setMode(load('lc-mode')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
 applyLang();
-if(document.fonts)Promise.all([400,500,600,700].map(w=>document.fonts.load(`${w} 20px "Hind Siliguri"`,'আঅabc')).concat([document.fonts.load('700 20px "Playfair Display"','Aa'),document.fonts.load('italic 500 20px "Playfair Display"','Aa'),document.fonts.load('700 20px "Tiro Bangla"','আ'),document.fonts.load('italic 400 20px "Tiro Bangla"','আ')])).then(drawPrev).catch(()=>{});
+if(document.fonts)Promise.all([400,500,600,700].map(w=>document.fonts.load(`${w} 20px "Hind Siliguri"`,'আঅabc০১২৩৪৫৬৭৮৯')).concat([document.fonts.load('700 20px "Playfair Display"','Aa'),document.fonts.load('italic 500 20px "Playfair Display"','Aa'),document.fonts.load('700 20px "Tiro Bangla"','আ০১২৩৪৫৬৭৮৯'),document.fonts.load('italic 400 20px "Tiro Bangla"','আ০১২৩৪৫৬৭৮৯')])).then(drawPrev).catch(()=>{});
 </script>
 </body>
 </html>

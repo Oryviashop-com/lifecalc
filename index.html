@@ -279,7 +279,7 @@ function drawPrev(){draw($('#cv'),.8)}
 $('#png').onclick=()=>exp('png');$('#jpg').onclick=()=>exp('jpg');
 
 
-const PT=[['#2b1a05','#7a5410','#1a1003','#fff4d6','#f5c542','lines',1],['#0b132b','#1c2d5a','#0b132b','#eaf6ff','#7fd6ff','stars',1],['#12002b','#3b0a6e','#05000f','#ffffff','#ff2bd6','stars',1],['#3a1c24','#b76e79','#4a2530','#fff0ee','#ffd0c4','rings',0],['#02221a','#0b6b50','#01110d','#e6fff5','#e3c76b','lines',0],['#021428','#0a7a6a','#3a1d7a','#ffffff','#8bffd9','stars',1],['#050505','#1a1a1f','#000000','#ffffff','#e5e5ea','dots',0],['#2a0008','#8f0f2a','#16000a','#ffe9ec','#ffb3c0','rings',0],['#0a0220','#2a1a6e','#000000','#ffffff','#ffd36b','stars',1],['#ff9a5a','#ff5fa2','#7a5cff','#ffffff','#fff3b0','rings',0],['#000000','#1b1405','#000000','#fff3cf','#d4af37','lines',0],['#2a2d34','#7c828d','#1a1c21','#ffffff','#e6e9ee','lines',0],['#021033','#0b3fa8','#010a22','#e8f0ff','#7fb0ff','stars',0],['#1d0a33','#6a2fa3','#12061f','#f6ecff','#d9a8ff','rings',0],['#2b0000','#a30f1f','#140000','#fff1f1','#ffd27a','lines',0],['#1a0b3a','#d4567a','#ff9a62','#ffffff','#ffe3c2','rings',0],['#3b2f22','#a58a5c','#2b2118','#fff7e6','#f3deb0','dots',0],['#cfefff','#8fd0f5','#4a90c8','#06223a','#0b4f85','stars',0],['#12002e','#5a1aa8','#0a0018','#f3e8ff','#c89bff','stars',0],['#1a0a02','#c2571a','#2a0e03','#fff0e3','#ffb27a','lines',0]];
+const PT=[['#2b1a05','#7a5410','#1a1003','#fff4d6','#f5c542','deco',1,0],['#0b132b','#1c2d5a','#0b132b','#eaf6ff','#7fd6ff','geo',1,1],['#12002b','#3b0a6e','#05000f','#ffffff','#ff2bd6','grid',1,2],['#2a1118','#9c4f5d','#3a1722','#fff0ee','#ffd0c4','silk',0,0],['#02221a','#0b6b50','#01110d','#e6fff5','#e3c76b','marble',0,1],['#021428','#0a7a6a','#3a1d7a','#ffffff','#8bffd9','aurora',1,3],['#050505','#1a1a1f','#000000','#ffffff','#e5e5ea','hex',0,2],['#2a0008','#8f0f2a','#16000a','#ffe9ec','#ffb3c0','bokeh',0,0],['#0a0220','#2a1a6e','#000000','#ffffff','#ffd36b','cosmic',1,3],['#ff7a3d','#ff3d8e','#5b3cff','#ffffff','#fff3b0','burst',0,1],['#000000','#1b1405','#000000','#fff3cf','#d4af37','panels',0,2],['#16181d','#4b515c','#0c0d10','#ffffff','#dfe3ea','waves',0,0],['#021033','#0b3fa8','#010a22','#e8f0ff','#7fb0ff','waves',0,1],['#1d0a33','#6a2fa3','#12061f','#f6ecff','#d9a8ff','rings',0,3],['#2b0000','#a30f1f','#140000','#fff1f1','#ffd27a','deco',0,2],['#150a33','#b83a6d','#ff7a45','#ffffff','#ffe3c2','silk',0,1],['#2a2016','#b8975a','#1f170f','#fff7e6','#ffe9b8','marble',0,0],['#0b2a4a','#1f6aa8','#0a1f38','#f2fbff','#bfe9ff','geo',0,3],['#12002e','#5a1aa8','#0a0018','#f3e8ff','#c89bff','cosmic',0,1],['#1a0a02','#c2571a','#2a0e03','#fff0e3','#ffb27a','lines',0,0]];
 const PRICE=20,AH='b570ac1227437e67a2c0839524f8abfffea406e9b036153c84dd5c4df9e7c06e';
 Object.assign(T.bn,{PN:['রয়্যাল গোল্ড','ডায়মন্ড','নিয়ন নাইট','রোজ গোল্ড','এমারেল্ড লাক্স','অরোরা','অবসিডিয়ান','স্কারলেট ভেলভেট','কসমিক গ্যালাক্সি','হলো সানরাইজ'],prem:'👑 প্রিমিয়াম • প্রতিটি ৳20',buy:'👑 এই থিম কিনুন ৳20',shopT:'👑 প্রিমিয়াম থিম কিনুন',tot:'মোট',bkL:'বিকাশ নাম্বার (Send Money)',cp:'কপি',cpd:'কপি হয়েছে!',stp:'১) নাম্বারটি কপি করে টাকা পাঠান। ২) নিচে আপনার বিকাশ নাম্বার ও TrxID দিন।',snL:'যে নাম্বার থেকে টাকা পাঠিয়েছেন',trxL:'Trx ID',sub:'অর্ডার জমা দিন',ordOk:'অর্ডার জমা হয়েছে! এডমিন যাচাই করলে থিম আনলক হবে।',ordBad:'১১ ডিজিটের নাম্বার, Trx ID এবং অন্তত একটি থিম দিন।',needDb:'সরাসরি অর্ডার জমা দিতে claude.ai-তে সাইন-ইন লাগবে। এখন অর্ডারের তথ্য কপি হবে — এডমিনকে পাঠান।',uidL:'আপনার ID (এডমিনকে দিন)',wrong:'ভুল পাসওয়ার্ড',calcFirst:'আগে হিসাব করুন',imgT:'কার্ড তৈরি!',imgH:'ছবিটি চেপে ধরে “Save to Photos / ছবি সংরক্ষণ” দিন, অথবা নিচের বাটন ব্যবহার করুন।',shr:'📲 শেয়ার / গ্যালারিতে সেভ',dl:'⬇ ডাউনলোড',noShare:'এই ডিভাইসে শেয়ার নেই — ছবিটি চেপে ধরে সেভ করুন',own:'আনলকড'});
 Object.assign(T.en,{PN:['Royal Gold','Diamond','Neon Night','Rose Gold','Emerald Luxe','Aurora','Obsidian','Scarlet Velvet','Cosmic Galaxy','Holo Sunrise'],prem:'👑 Premium • ৳20 each',buy:'👑 Buy this theme ৳20',shopT:'👑 Buy premium themes',tot:'Total',bkL:'bKash number (Send Money)',cp:'Copy',cpd:'Copied!',stp:'1) Copy the number and send money. 2) Enter your bKash number & TrxID below.',snL:'Number you sent money from',trxL:'Trx ID',sub:'Submit order',ordOk:'Order submitted! Themes unlock once the admin verifies.',ordBad:'Enter an 11-digit number, a Trx ID and at least one theme.',needDb:'Direct orders need a claude.ai sign-in. Order details will be copied — send them to the admin.',uidL:'Your ID (give to admin)',wrong:'Wrong password',calcFirst:'Calculate first',imgT:'Card ready!',imgH:'Press and hold the image and choose “Save to Photos”, or use the buttons below.',shr:'📲 Share / Save to gallery',dl:'⬇ Download',noShare:'Sharing unavailable — press and hold the image to save',own:'Unlocked'});
@@ -287,15 +287,33 @@ st.premium=false;st.admin=false;st.bk='';st.user=null;
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const owned=i=>i<10||st.admin||st.premium;
 function rnd(a){return()=>(a=(a*16807)%2147483647)/2147483647}
-function fx(c,W,H,R,P,u){const ac=P[4],r=rnd(7+W),p=P[5];c.save();
+function fx(c,W,H,R,P,u){const ac=P[4],r=rnd(7+W),d=P[5],fr=P[7];c.save();
  let g=c.createRadialGradient(W*.5,H*.18,0,W*.5,H*.18,R*.9);g.addColorStop(0,ac);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.13;c.fillStyle=g;c.fillRect(0,0,W,H);
  g=c.createRadialGradient(W*.1,H*.92,0,W*.1,H*.92,R*.7);g.addColorStop(0,P[1]);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.35;c.fillStyle=g;c.fillRect(0,0,W,H);
  g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.45,'rgba(255,255,255,.07)');g.addColorStop(.55,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,.03)');c.globalAlpha=1;c.fillStyle=g;c.fillRect(0,0,W,H);
- c.strokeStyle=ac;c.fillStyle=ac;
- if(p==='lines'){c.globalAlpha=.07;c.lineWidth=2*u;for(let i=-H;i<W;i+=40*u){c.beginPath();c.moveTo(i,0);c.lineTo(i+H,H);c.stroke()}}
- if(p==='rings'){c.globalAlpha=.16;c.lineWidth=2*u;for(let i=1;i<=7;i++){c.beginPath();c.arc(W*.95,H*.05,i*R*.13,0,7);c.stroke();c.beginPath();c.arc(W*.05,H*.95,i*R*.1,0,7);c.stroke()}}
- if(p==='stars'||p==='dots'){for(let i=0;i<(p==='stars'?110:70);i++){const x=r()*W,y=r()*H,z=(r()*2.2+.6)*u;c.globalAlpha=.25+r()*.6;c.beginPath();c.arc(x,y,z,0,7);c.fill();if(p==='stars'&&i%9===0){c.globalAlpha=.6;c.fillRect(x-7*u,y-.6*u,14*u,1.2*u);c.fillRect(x-.6*u,y-7*u,1.2*u,14*u)}}}
- c.globalAlpha=.9;c.lineWidth=3*u;c.strokeRect(30*u,30*u,W-60*u,H-60*u);c.globalAlpha=.35;c.lineWidth=1.5*u;c.strokeRect(46*u,46*u,W-92*u,H-92*u);c.restore()}
+ c.strokeStyle=ac;c.fillStyle=ac;c.lineWidth=2*u;
+ const S=(n,a)=>{c.fillStyle=ac;for(let i=0;i<n;i++){const x=r()*W,y=r()*H,z=(r()*2.2+.6)*u;c.globalAlpha=a*(.4+r()*.6);c.beginPath();c.arc(x,y,z,0,7);c.fill();if(i%9===0){c.globalAlpha=a*.7;c.fillRect(x-7*u,y-.6*u,14*u,1.2*u);c.fillRect(x-.6*u,y-7*u,1.2*u,14*u)}}};
+ const ln=(a,b,x,y)=>{c.beginPath();c.moveTo(a,b);c.lineTo(x,y);c.stroke()};
+ if(d==='deco'){c.globalAlpha=.14;for(let i=-8;i<=8;i++)ln(W/2,H*1.02,W/2+i*W*.085,H*.2);c.globalAlpha=.2;for(let k=1;k<=6;k++){c.beginPath();c.arc(W/2,H*1.02,k*R*.2,Math.PI,0);c.stroke()}}
+ else if(d==='geo'){c.globalAlpha=.11;const s=90*u;for(let y=0;y<H+s;y+=s)for(let x=((y/s)%2)*s/2;x<W+s;x+=s){c.beginPath();c.moveTo(x,y-s/2);c.lineTo(x+s/2,y);c.lineTo(x,y+s/2);c.lineTo(x-s/2,y);c.closePath();c.stroke()}S(25,.7)}
+ else if(d==='grid'){const hz=H*.6;g=c.createLinearGradient(0,hz-R*.3,0,hz);g.addColorStop(0,ac);g.addColorStop(1,P[1]);c.fillStyle=g;c.globalAlpha=.4;c.beginPath();c.arc(W/2,hz,R*.3,Math.PI,0);c.fill();for(let i=0;i<13;i++){const y=hz+Math.pow(i/12,2)*(H-hz);ln(0,y,W,y)}for(let i=-12;i<=12;i++)ln(W/2,hz,W/2+i*W*.16,H);S(30,.6)}
+ else if(d==='silk'){c.globalAlpha=.14;for(let i=0;i<14;i++){const y=H*(.05+i*.07);c.beginPath();c.moveTo(-20,y);c.bezierCurveTo(W*.3,y-H*.12,W*.6,y+H*.14,W+20,y-H*.04);c.lineWidth=(1+i%3)*2*u;c.stroke()}}
+ else if(d==='marble'){for(let v=0;v<8;v++){c.globalAlpha=.1+r()*.1;c.lineWidth=(1+r()*3)*u;c.beginPath();let x=r()*W,y=0;c.moveTo(x,y);while(y<H){x+=(r()-.5)*90*u;y+=40*u;c.lineTo(x,y)}c.stroke()}}
+ else if(d==='aurora'){for(let k=0;k<5;k++)for(const[lw,al]of[[110,.05],[4,.3]]){c.lineWidth=lw*u;c.globalAlpha=al;c.beginPath();for(let x=-20;x<=W+20;x+=20){const y=H*(.22+k*.07)+Math.sin(x/W*5+k*1.3)*H*.06;x<0?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}S(40,.6)}
+ else if(d==='hex'){c.globalAlpha=.12;const s=64*u,h=s*Math.sqrt(3);for(let col=0;col*1.5*s<W+s*2;col++)for(let row=-1;row*h<H+h;row++){const x=col*1.5*s,y=row*h+(col%2)*h/2;c.beginPath();for(let k=0;k<6;k++){const a=k*Math.PI/3;k?c.lineTo(x+s*Math.cos(a),y+s*Math.sin(a)):c.moveTo(x+s,y)}c.closePath();c.stroke()}}
+ else if(d==='bokeh'){for(let i=0;i<26;i++){const x=r()*W,y=r()*H,z=(20+r()*90)*u;c.globalAlpha=.05+r()*.09;c.beginPath();c.arc(x,y,z,0,7);c.fill();c.globalAlpha=.18;c.lineWidth=1.5*u;c.stroke()}}
+ else if(d==='cosmic'){for(const[x,y,col]of[[.2,.3,ac],[.8,.65,P[1]],[.5,.85,P[1]]]){g=c.createRadialGradient(W*x,H*y,0,W*x,H*y,R*.6);g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.3;c.fillStyle=g;c.fillRect(0,0,W,H)}S(130,.9)}
+ else if(d==='burst'){c.globalAlpha=.09;c.fillStyle='#fff';const cx=W/2,cy=H*.4;for(let i=0;i<36;i+=2){const a=i*Math.PI/18,b=(i+1)*Math.PI/18;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(a)*H*2,cy+Math.sin(a)*H*2);c.lineTo(cx+Math.cos(b)*H*2,cy+Math.sin(b)*H*2);c.fill()}}
+ else if(d==='panels'){c.fillStyle='#fff';for(let i=0;i<6;i+=2){c.globalAlpha=.035;c.fillRect(i*W/6,0,W/6,H)}c.globalAlpha=.5;ln(0,H*.1,W,H*.1);ln(0,H*.9,W,H*.9);c.globalAlpha=.25;ln(0,H*.1+14*u,W,H*.1+14*u);ln(0,H*.9-14*u,W,H*.9-14*u)}
+ else if(d==='waves'){c.globalAlpha=.12;for(let k=0;k<26;k++){c.beginPath();for(let x=0;x<=W;x+=16){const y=H*k/25+Math.sin(x/W*7+k*.4)*16*u;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}}
+ else if(d==='rings'){c.globalAlpha=.16;for(let i=1;i<=7;i++){c.beginPath();c.arc(W*.95,H*.05,i*R*.13,0,7);c.stroke();c.beginPath();c.arc(W*.05,H*.95,i*R*.1,0,7);c.stroke()}}
+ else{c.globalAlpha=.07;for(let i=-H;i<W;i+=40*u)ln(i,0,i+H,H)}
+ c.strokeStyle=ac;c.globalAlpha=.9;c.lineWidth=3*u;
+ if(fr===0){c.strokeRect(30*u,30*u,W-60*u,H-60*u);c.globalAlpha=.35;c.lineWidth=1.5*u;c.strokeRect(46*u,46*u,W-92*u,H-92*u)}
+ else if(fr===1){const m=34*u,l=150*u;c.lineWidth=5*u;for(const[x,y,dx,dy]of[[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]]){c.beginPath();c.moveTo(x+dx*l,y);c.lineTo(x,y);c.lineTo(x,y+dy*l);c.stroke()}c.globalAlpha=.25;c.lineWidth=1.5*u;c.strokeRect(54*u,54*u,W-108*u,H-108*u)}
+ else if(fr===2){c.lineWidth=4*u;c.beginPath();c.roundRect(34*u,34*u,W-68*u,H-68*u,70*u);c.stroke();c.globalAlpha=.3;c.lineWidth=1.5*u;c.beginPath();c.roundRect(52*u,52*u,W-104*u,H-104*u,56*u);c.stroke()}
+ else{c.lineWidth=3*u;for(const y of[40*u,H-40*u])ln(60*u,y,W-60*u,y);c.globalAlpha=.35;c.lineWidth=1.5*u;for(const y of[56*u,H-56*u])ln(60*u,y,W-60*u,y)}
+ c.restore()}
 
 function buildStudioUI(){
   const sw=$('#sw');sw.innerHTML='';
@@ -337,7 +355,7 @@ function openAuth(mode){
     try{if(mode==='up'){const c=await auth.createUserWithEmailAndPassword(em,pw);await c.user.updateProfile({displayName:nm});await fs.doc('users/'+c.user.uid).set({name:nm,login:id.trim(),premium:false,at:Date.now()})}else await auth.signInWithEmailAndPassword(em,pw);closeM()}catch(e){$('#ae').textContent=tr('fbErr')+' ('+(e.code||e.message)+')'}};
 }
 function openAcc(){openM(`<h2>${tr('acc')}</h2><p><b>${esc(st.user.displayName)}</b><br><span class="mut">${esc((st.user.email||'').replace('@phone.lifecalc.app',''))}</span></p><p>${st.premium?tr('prm'):''}</p><button class="btn alt" id="lo" style="width:100%">${tr('logout')}</button>`);$('#lo').onclick=async()=>{await auth.signOut();st.admin=false;buildStudioUI();closeM()}}
-if(auth){auth.onAuthStateChanged(u=>{st.user=u;st.premium=false;if(unU){unU();unU=null}hdr();buildStudioUI();if(u&&fs)unU=fs.doc('users/'+u.uid).onSnapshot(sn=>{st.premium=!!(sn.exists&&sn.data().premium);buildStudioUI()},()=>{})});
+if(auth){auth.onAuthStateChanged(u=>{st.user=u;st.premium=false;if(unU){unU();unU=null}hdr();buildStudioUI();if(u&&fs)unU=fs.doc('users/'+u.uid).onSnapshot(sn=>{if(!sn.exists)fs.doc('users/'+u.uid).set({name:u.displayName||'',login:(u.email||'').replace('@phone.lifecalc.app',''),premium:false,at:Date.now()}).catch(()=>{});st.premium=!!(sn.exists&&sn.data().premium);buildStudioUI()},()=>{})});
   fs.doc('settings/pay').onSnapshot(sn=>{if(sn.exists)st.bk=String(sn.data().bkash||'')},()=>{})}
 hdr();
 
@@ -373,11 +391,11 @@ function openAdmin(){
   $('#al').onclick=go;$('#ap').onkeydown=e=>{if(e.key==='Enter')go()};
 }
 async function adminPanel(){
-  openM(`<h2>⚙️ এডমিন প্যানেল</h2>${st.user?'':'<div class="err">অর্ডার দেখতে/অনুমোদন দিতে আপনার এডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।</div>'}
+  openM(`<h2>⚙️ এডমিন প্যানেল</h2><div class="err" id="pe"></div>${st.user?'':'<div class="err">অর্ডার দেখতে/অনুমোদন দিতে আপনার এডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।</div>'}
   <label>বিকাশ নাম্বার (গ্রাহক কপি করবে)</label><div class="row2"><input id="ab" value="${esc(st.bk)}" inputmode="numeric"><button class="sm" id="asv">সেভ</button></div>
   <h3>অর্ডার</h3><div id="ol" class="mut">লোড হচ্ছে…</div>
   <h3>ম্যানুয়াল এক্সেস</h3><input id="gu" placeholder="গ্রাহকের UID"><div class="row" style="margin-top:8px"><button class="sm ok" id="ga">প্রিমিয়াম দিন</button><button class="sm no" id="gr">বাতিল করুন</button></div>`);
-  const run=async fn=>{try{await fn();toast('✓')}catch(e){toast(e.code||e.message)}};
+  const run=async fn=>{try{await fn();$('#pe').textContent='';toast('✓')}catch(e){$('#pe').textContent=(e.code||e.message)+' — Firestore Rules আপডেট করে Publish করেছেন কিনা দেখুন';toast(e.code||e.message)}};
   $('#asv').onclick=()=>run(async()=>{await fs.doc('settings/pay').set({bkash:$('#ab').value.trim()});st.bk=$('#ab').value.trim()});
   $('#ga').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:true},{merge:true}));
   $('#gr').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:false},{merge:true}));

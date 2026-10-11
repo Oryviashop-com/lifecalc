@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>লাইফ ক্যালকুলেটর | Life Calculator – বয়স, আয়ু ও শেয়ারযোগ্য কার্ড</title>
+<meta name="description" content="জন্ম তারিখ দিয়ে জানুন আপনার বয়স, জীবনের কত শতাংশ পেরিয়েছে, পরবর্তী জন্মদিন ও মাইলস্টোন। সুন্দর শেয়ারযোগ্য কার্ড বানান। Free, private, 100% client-side life calculator.">
+<meta name="keywords" content="life calculator, age calculator, লাইফ ক্যালকুলেটর, বয়স ক্যালকুলেটর, birthday countdown, share card">
+<meta name="theme-color" content="#FF6A00">
+<meta property="og:type" content="website">
+<meta property="og:title" content="লাইফ ক্যালকুলেটর | Life Calculator">
+<meta property="og:description" content="আপনার জীবনের প্রতিটি সেকেন্ডের হিসাব — এবং শেয়ারযোগ্য কার্ড। Your life in numbers, privately in your browser.">
+<meta property="og:locale" content="bn_BD">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="লাইফ ক্যালকুলেটর | Life Calculator">
+<meta name="twitter:description" content="Age, life progress, next birthday, milestones & a shareable card — all private.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Life Calculator","alternateName":"লাইফ ক্যালকুলেটর","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":["bn","en"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#fff8f2;--card:#fff;--tx:#1c1410;--mut:#7a6a5f;--bd:#f0e0d2;--br:#FF6A00;--br2:#ff9a4d;--sh:0 10px 40px rgba(255,106,0,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#120d0a;--card:#1d1612;--tx:#fbefe6;--mut:#b09c8e;--bd:#33261d;--sh:0 10px 40px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--bg:#120d0a;--card:#1d1612;--tx:#fbefe6;--mut:#b09c8e;--bd:#33261d;--sh:0 10px 40px rgba(0,0,0,.4)}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;transition:background .3s,color .3s}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 20px;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+.logo{font-weight:700;font-size:20px;display:flex;align-items:center;gap:8px}
+.logo i{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--br),var(--br2));display:inline-block}
+.tools{display:flex;gap:8px}
+.tbtn{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 14px;font:inherit;font-weight:600;cursor:pointer;font-size:14px}
+.tbtn:hover{border-color:var(--br)}
+main{max-width:1000px;margin:0 auto;padding:0 18px}
+.hero{text-align:center;padding:70px 0 50px}
+.pill{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,106,0,.12);color:var(--br);font-weight:600;font-size:14px}
+h1{font-size:clamp(32px,6vw,58px);line-height:1.15;margin:18px 0 14px;letter-spacing:-.5px}
+h1 b{background:linear-gradient(135deg,var(--br),var(--br2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:620px;margin:0 auto 28px;color:var(--mut);font-size:18px}
+.btn{border:0;background:linear-gradient(135deg,var(--br),#ff8a2b);color:#fff;font:inherit;font-weight:700;font-size:17px;padding:14px 32px;border-radius:14px;cursor:pointer;box-shadow:0 8px 24px rgba(255,106,0,.35);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.alt{background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:40px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:22px;box-shadow:var(--sh)}
+.feats h3{margin:0 0 4px;font-size:18px;color:var(--br)}.feats p{margin:0;color:var(--mut);font-size:15px}
+section{margin:50px 0}
+h2{font-size:28px;margin:0 0 18px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+label small{color:var(--mut);font-weight:400}
+input,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;font-size:16px}
+input:focus,textarea:focus{outline:2px solid var(--br);border-color:transparent}
+.err{color:#e11d48;font-weight:600;margin-top:10px;min-height:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:var(--bg);border:1px solid var(--bd);border-radius:16px;padding:14px;text-align:center}
+.stat b{display:block;font-size:26px;color:var(--br);font-variant-numeric:tabular-nums;word-break:break-all}
+.stat span{font-size:13px;color:var(--mut)}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px}
+.age{font-size:clamp(34px,6vw,52px);font-weight:700;line-height:1.2}
+.bar{height:16px;border-radius:99px;background:var(--bd);overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--br),var(--br2));border-radius:99px;transition:width 1s}
+.mut{color:var(--mut);font-size:14px}
+.ms{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed var(--bd);flex-wrap:wrap}
+.ms:last-child{border:0}.tag{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.tag.p{background:rgba(34,197,94,.15);color:#16a34a}.tag.u{background:rgba(255,106,0,.15);color:var(--br)}
+.studio{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:760px){.studio{grid-template-columns:1fr}}
+.prev{display:flex;justify-content:center;background:var(--bg);border:1px solid var(--bd);border-radius:16px;padding:12px}
+#cv{max-width:100%;max-height:560px;width:auto;height:auto;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.sw{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.sw button{width:42px;height:42px;border-radius:50%;border:3px solid transparent;cursor:pointer;outline:1px solid var(--bd)}
+.sw button.on{border-color:var(--br);outline:2px solid var(--card);transform:scale(1.1)}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.seg button{flex:1;min-width:90px;padding:10px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--br);color:#fff;border-color:var(--br)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.row .btn{flex:1;padding:13px 10px;font-size:16px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--tx);color:var(--bg);padding:10px 20px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none;font-weight:600;z-index:20}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+footer{text-align:center;color:var(--mut);padding:30px 18px 40px;font-size:14px}
+.hide,.ov.hide{display:none!important}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.mbox{position:relative;background:var(--card);color:var(--tx);width:min(580px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+@media(min-width:700px){.ov{align-items:center}.mbox{border-radius:22px}}
+.mbox h2{font-size:22px;margin:0 30px 12px 0}.mbox h3{margin:18px 0 8px;font-size:17px}
+.x{position:absolute;top:12px;right:12px;border:0;background:var(--bg);color:var(--tx);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px}
+.pl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.pi{display:flex;align-items:center;gap:8px;border:1px solid var(--bd);background:var(--bg);border-radius:12px;padding:9px;font-size:14px;margin:0;cursor:pointer}
+.pi input{width:auto}.pi b{margin-left:auto;color:var(--br)}.pi.own{opacity:.5}
+.sd{width:22px;height:22px;border-radius:50%;flex:none;border:1px solid #d4af37}
+.bkb{background:rgba(255,106,0,.1);border:1px dashed var(--br);border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bkb b{font-size:20px;letter-spacing:1px}
+.sm{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:10px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer;font-size:14px}
+.sm.ok{background:#16a34a;color:#fff;border-color:#16a34a}.sm.no{background:#e11d48;color:#fff;border-color:#e11d48}
+.ex{max-width:100%;max-height:48vh;border-radius:12px;display:block;margin:10px auto;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.sw .pr{border-color:#d4af37;position:relative;font-size:15px;color:#fff;text-shadow:0 1px 3px #000}
+.pb2{flex-basis:100%;font-weight:700;font-size:13px;color:#b8860b;margin:4px 0 -4px}
+.od{border:1px solid var(--bd);border-radius:12px;padding:10px;margin:8px 0;font-size:14px;word-break:break-all}
+.mbw{margin-top:14px}.mbw a{color:var(--br);font-weight:700;text-decoration:none;cursor:pointer}
+.row2{display:flex;gap:8px}.row2 input{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i></i><span data-i="brand"></span></div>
+  <div class="tools"><button class="tbtn" id="lg">EN</button><button class="tbtn" id="md" aria-label="theme">🌙</button></div>
+</header>
+<main>
+<div class="hero" id="top">
+  <span class="pill" data-i="pill"></span>
+  <h1 data-h="heroH"></h1>
+  <p data-i="heroP"></p>
+  <button class="btn" onclick="document.getElementById('calc').scrollIntoView()" data-i="cta"></button>
+  <div class="feats">
+    <div class="card"><h3 data-i="f1"></h3><p data-i="f1d"></p></div>
+    <div class="card"><h3 data-i="f2"></h3><p data-i="f2d"></p></div>
+    <div class="card"><h3 data-i="f3"></h3><p data-i="f3d"></p></div>
+  </div>
+</div>
+
+<section id="calc">
+  <h2 data-i="calcT"></h2>
+  <div class="card">
+    <div class="form">
+      <div><label for="dob" data-i="dob"></label><input type="date" id="dob"></div>
+      <div><label for="tob"><span data-i="tob"></span> <small data-i="opt"></small></label><input type="time" id="tob"></div>
+      
+      <div><label for="nm"><span data-i="name"></span> <small data-i="opt"></small></label><input id="nm" maxlength="24" data-p="namePh"></div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="go" data-i="go"></button>
+  </div>
+</section>
+
+<div id="res" class="hide">
+<section>
+  <h2 data-i="resT"></h2>
+  <div class="big">
+    <div class="card"><div class="mut" data-i="ageL"></div><div class="age" id="ageTxt"></div>
+      <div class="mut" id="ageSub"></div>
+      <div class="bar"><i id="pb"></i></div>
+      <div class="mut" id="pt"></div></div>
+    <div class="card"><div class="mut" data-i="nb"></div><div class="age" id="nbDate"></div><div class="mut" id="nbDay"></div>
+      <div class="grid" style="margin-top:12px">
+        <div class="stat"><b id="nd">0</b><span data-i="dd"></span></div><div class="stat"><b id="nh">0</b><span data-i="hh"></span></div>
+        <div class="stat"><b id="nmn">0</b><span data-i="mm"></span></div><div class="stat"><b id="ns">0</b><span data-i="ss"></span></div></div></div>
+  </div>
+  <div class="card">
+    <div class="mut" style="margin-bottom:10px">⏱ <span data-i="live"></span></div>
+    <div class="grid">
+      <div class="stat"><b id="cs">0</b><span data-i="secs"></span></div><div class="stat"><b id="cm">0</b><span data-i="mins"></span></div>
+      <div class="stat"><b id="ch">0</b><span data-i="hrs"></span></div><div class="stat"><b id="cd">0</b><span data-i="days"></span></div>
+      <div class="stat"><b id="cw">0</b><span data-i="wks"></span></div><div class="stat"><b id="cr">0</b><span data-i="rem"></span></div>
+    </div>
+  </div>
+</section>
+<section>
+  <h2 data-i="msT"></h2>
+  <div class="card" id="ml"></div>
+</section>
+<section id="studio">
+  <h2 data-i="stT"></h2>
+  <div class="studio">
+    <div class="prev"><canvas id="cv"></canvas></div>
+    <div class="card">
+      <label data-i="theme"></label><div class="sw" id="sw"></div>
+      <label data-i="layout"></label>
+      <div class="seg" id="sg"></div>
+      <label for="qt" data-i="quote"></label>
+      <textarea id="qt" rows="2" maxlength="110" data-p="quotePh"></textarea>
+      <div class="row" style="margin-top:16px"><button class="btn" id="png">PNG ⬇</button><button class="btn alt" id="jpg">JPG ⬇</button></div>
+      <p class="mut" data-i="hd"></p>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+<footer><div data-i="priv"></div><div style="margin-top:6px">© <span id="yr"></span> Life Calculator</div><div class="mbw"><a id="mbk" role="button" tabindex="0">Made by Dahia</a></div></footer>
+<div class="ov hide" id="ov"><div class="mbox"><button class="x" onclick="closeM()" aria-label="close">✕</button><div id="mb2"></div></div></div>
+<div id="toast"></div>
+
+<script>
+const T={bn:{brand:'লাইফ ক্যালকুলেটর',pill:'ফ্রি • প্রাইভেট • শেয়ারযোগ্য',heroH:'আপনার জীবনের প্রতিটি <b>সেকেন্ডের</b> হিসাব',heroP:'জন্ম তারিখ দিন — জানুন আপনার বয়স, জীবনের কতটা পেরিয়েছে, পরবর্তী জন্মদিন কবে, আর বানিয়ে ফেলুন সুন্দর শেয়ারযোগ্য কার্ড।',cta:'শুরু করুন',f1:'🔒 ক্লায়েন্ট-সাইড গণনা',f1d:'সব হিসাব আপনার ব্রাউজারেই হয়।',f2:'🚫 কোনো ডেটা সংরক্ষণ নয়',f2d:'আপনার জন্ম তারিখ কোনো সার্ভারে যায় না।',f3:'🎨 কার্ড স্টুডিও',f3d:'১০টি থিম, ৩টি লেআউট, HD এক্সপোর্ট।',calcT:'ক্যালকুলেটর',dob:'জন্ম তারিখ',tob:'জন্ম সময়',opt:'(ঐচ্ছিক)',life:'প্রত্যাশিত আয়ু (বছর)',name:'আপনার নাম',namePh:'যেমন: রিয়া',go:'হিসাব করুন',resT:'আপনার ফলাফল',ageL:'আপনার বয়স',nb:'পরবর্তী জন্মদিন',dd:'দিন',hh:'ঘণ্টা',mm:'মিনিট',ss:'সেকেন্ড',live:'লাইভ কাউন্টার — আপনি এ পর্যন্ত বেঁচেছেন',secs:'সেকেন্ড',mins:'মিনিট',hrs:'ঘণ্টা',days:'দিন',wks:'সপ্তাহ',rem:'বাকি দিন (আনুমানিক)',msT:'মাইলস্টোন',stT:'কার্ড স্টুডিও',theme:'থিম',layout:'লেআউট',quote:'কাস্টম কোট',quotePh:'আপনার প্রিয় উক্তি লিখুন…',hd:'হাই-রেজোলিউশন (২x) এক্সপোর্ট। কার্ডে শুধু আপনার দেওয়া তথ্য থাকে।',priv:'🔒 সব গণনা আপনার ডিভাইসেই হয়। কোনো ব্যক্তিগত তথ্য সংরক্ষিত বা পাঠানো হয় না।',bad:'সঠিক জন্ম তারিখ দিন (ভবিষ্যতের তারিখ নয়)।',y:'বছর',m:'মাস',d:'দিন',of:'জীবনের',done:'পেরিয়েছে',left:'বছর বাকি',in:'আর',pass:'পেরিয়েছে',up:'আসছে',days2:'দিন',bil:'কোটি সেকেন্ড',cT:'লাইফ স্ট্যাটিস',lived:'দিন বেঁচেছি',nbc:'পরবর্তী জন্মদিন',dq:'প্রতিটি মুহূর্তকে মূল্যবান করে তুলুন।',L:['স্টোরি','স্কয়ার','ল্যান্ডস্কেপ'],TH:['সানসেট','মিডনাইট','ওশান','ফরেস্ট','রয়্যাল','রোজ','গোল্ড','পার্ল','অরোরা','চারকোল'],saved:'সংরক্ষিত!',fail:'সংরক্ষণ হয়নি'},
+en:{brand:'Life Calculator',pill:'Free • Private • Shareable',heroH:'Count every <b>second</b> of your life',heroP:'Enter your birth date — see your age, how much of life has passed, your next birthday, and craft a beautiful shareable card.',cta:'Get started',f1:'🔒 Client-side only',f1d:'All math happens in your browser.',f2:'🚫 Nothing stored',f2d:'Your birth date never reaches a server.',f3:'🎨 Card Studio',f3d:'10 themes, 3 layouts, HD export.',calcT:'Calculator',dob:'Date of birth',tob:'Time of birth',opt:'(optional)',life:'Expected lifespan (years)',name:'Your name',namePh:'e.g. Ria',go:'Calculate',resT:'Your results',ageL:'Your age',nb:'Next birthday',dd:'Days',hh:'Hours',mm:'Minutes',ss:'Seconds',live:'Live counter — you have lived',secs:'seconds',mins:'minutes',hrs:'hours',days:'days',wks:'weeks',rem:'days left (approx.)',msT:'Milestones',stT:'Card Studio',theme:'Theme',layout:'Layout',quote:'Custom quote',quotePh:'Write a quote you love…',hd:'High-resolution (2x) export. The card only contains what you entered.',priv:'🔒 Everything is computed on your device. No personal data is stored or sent.',bad:'Enter a valid birth date (not in the future).',y:'years',m:'months',d:'days',of:'of life',done:'complete',left:'years left',in:'in',pass:'Passed',up:'Upcoming',days2:'days',bil:'billion seconds',cT:'LIFE STATS',lived:'days lived',nbc:'Next birthday',dq:'Make every moment count.',L:['Story','Square','Landscape'],TH:['Sunset','Midnight','Ocean','Forest','Royal','Rose','Gold','Pearl','Aurora','Charcoal'],saved:'Saved!',fail:'Not saved'}};
+const TH=[['#FF6A00','#e53900','#fff','#fff1e0'],['#0f172a','#1e293b','#f8fafc','#FF6A00'],['#0ea5e9','#1e3a8a','#fff','#bae6fd'],['#22c55e','#064e3b','#fff','#bbf7d0'],['#7c3aed','#312e81','#fff','#ddd6fe'],['#f43f5e','#9f1239','#fff','#fecdd3'],['#fde047','#b45309','#2a1a05','#7c2d12'],['#ffffff','#e5e7eb','#111827','#FF6A00'],['#06b6d4','#a855f7','#fff','#e0f2fe'],['#18181b','#3f3f46','#fafafa','#FF6A00']];
+const LAY=[[1080,1920],[1080,1080],[1200,630]];
+const st={lang:'bn',th:0,ly:0,birth:null,life:73,name:''};
+const $=s=>document.querySelector(s);
+const loc=()=>st.lang==='bn'?'bn-BD':'en-US';
+const f=n=>Math.floor(n).toLocaleString(loc());
+const fd=d=>d.toLocaleDateString(loc(),{day:'numeric',month:'long',year:'numeric'});
+const wd=d=>d.toLocaleDateString(loc(),{weekday:'long'});
+const tr=k=>T[st.lang][k];
+let ptimer;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(ptimer);ptimer=setTimeout(()=>t.classList.remove('on'),2200)}
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+
+function applyLang(){
+  document.documentElement.lang=st.lang;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=tr(e.dataset.i));
+  document.querySelectorAll('[data-h]').forEach(e=>e.innerHTML=tr(e.dataset.h));
+  document.querySelectorAll('[data-p]').forEach(e=>e.placeholder=tr(e.dataset.p));
+  $('#lg').textContent=st.lang==='bn'?'EN':'বাং';
+  $('#yr').textContent=new Date().getFullYear().toLocaleString(loc(),{useGrouping:false});
+  buildStudioUI(); if(st.birth){render();tick()} drawPrev();
+}
+function setMode(m){document.documentElement.dataset.theme=m;$('#md').textContent=m==='dark'?'☀️':'🌙';store('lc-mode',m)}
+$('#lg').onclick=()=>{st.lang=st.lang==='bn'?'en':'bn';store('lc-lang',st.lang);applyLang()};
+$('#md').onclick=()=>setMode(document.documentElement.dataset.theme==='dark'?'light':'dark');
+
+function ymd(b,n){let y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth(),d=n.getDate()-b.getDate();if(d<0){m--;d+=new Date(n.getFullYear(),n.getMonth(),0).getDate()}if(m<0){y--;m+=12}return[y,m,d]}
+function nextBd(b,n){let c=new Date(n.getFullYear(),b.getMonth(),b.getDate(),b.getHours(),b.getMinutes());if(c<=n)c=new Date(n.getFullYear()+1,b.getMonth(),b.getDate(),b.getHours(),b.getMinutes());return c}
+function stats(n=new Date()){const b=st.birth,ms=n-b,[y,m,d]=ymd(b,n),days=ms/864e5,age=days/365.2425,pct=Math.min(100,age/st.life*100);return{ms,y,m,d,days,age,pct,left:Math.max(0,st.life-age),nb:nextBd(b,n)}}
+
+$('#go').onclick=()=>{
+  const v=$('#dob').value,t=$('#tob').value||'00:00';
+  const b=v?new Date(v+'T'+t):null,l=73;
+  if(!b||isNaN(b)||b>new Date()||b.getFullYear()<1900||!(l>0)){$('#err').textContent=tr('bad');return}
+  $('#err').textContent='';st.birth=b;st.life=l;st.name=$('#nm').value.trim();
+  $('#res').classList.remove('hide');render();tick();drawPrev();
+  setTimeout(()=>$('#res').scrollIntoView(),50);
+};
+function render(){
+  const s=stats();
+  $('#ageTxt').textContent=`${f(s.y)} ${tr('y')}`;
+  $('#ageSub').textContent=`${f(s.m)} ${tr('m')} ${f(s.d)} ${tr('d')}`;
+  $('#pb').style.width=s.pct.toFixed(1)+'%';
+  $('#pt').textContent=`${s.pct.toLocaleString(loc(),{maximumFractionDigits:1})}% ${tr('of')} ${tr('done')} • ${s.left.toLocaleString(loc(),{maximumFractionDigits:1})} ${tr('left')}`;
+  $('#nbDate').textContent=fd(s.nb);$('#nbDay').textContent=wd(s.nb);
+  const M=[...[5e3,1e4,15e3,2e4,25e3].map(d=>({ms:d*864e5,l:`${f(d)} ${tr('days2')}`})),...[1e9,1.5e9].map(x=>({ms:x*1e3,l:st.lang==='bn'?`${f(x/1e7)} ${tr('bil')}`:`${(x/1e9)} ${tr('bil')}`}))].sort((a,b)=>a.ms-b.ms);
+  const now=Date.now();
+  $('#ml').innerHTML=M.map(m=>{const dt=new Date(st.birth.getTime()+m.ms),p=dt<=now;return`<div class="ms"><span><b>${m.l}</b> <span class="mut">• ${fd(dt)}</span></span><span class="tag ${p?'p':'u'}">${p?tr('pass'):tr('up')}</span></div>`}).join('');
+}
+function tick(){
+  if(!st.birth)return;const n=new Date(),s=stats(n),sec=s.ms/1e3;
+  $('#cs').textContent=f(sec);$('#cm').textContent=f(sec/60);$('#ch').textContent=f(sec/3600);$('#cd').textContent=f(s.days);$('#cw').textContent=f(s.days/7);
+  $('#cr').textContent=f(s.left*365.2425);
+  const r=Math.max(0,s.nb-n);$('#nd').textContent=f(r/864e5);$('#nh').textContent=f(r%864e5/36e5);$('#nmn').textContent=f(r%36e5/6e4);$('#ns').textContent=f(r%6e4/1e3);
+}
+setInterval(tick,1000);
+
+function buildStudioUI(){
+  $('#sw').innerHTML='';TH.forEach((t,i)=>{const b=document.createElement('button');b.style.background=`linear-gradient(135deg,${t[0]},${t[1]})`;b.title=tr('TH')[i];b.className=i===st.th?'on':'';b.onclick=()=>{st.th=i;buildStudioUI();drawPrev()};$('#sw').appendChild(b)});
+  $('#sg').innerHTML='';tr('L').forEach((l,i)=>{const b=document.createElement('button');b.textContent=`${l} ${LAY[i][0]}×${LAY[i][1]}`.replace(/\d+/g,x=>f(+x));b.className=i===st.ly?'on':'';b.onclick=()=>{st.ly=i;buildStudioUI();drawPrev()};$('#sg').appendChild(b)});
+}
+$('#qt').oninput=drawPrev;
+
+function wrap(c,text,w,max){const words=text.split(/\s+/),lines=[];let cur='';for(const x of words){const t=cur?cur+' '+x:x;if(c.measureText(t).width>w&&cur){lines.push(cur);cur=x}else cur=t}lines.push(cur);if(lines.length>max){lines.length=max;lines[max-1]=lines[max-1].replace(/.{0,2}$/,'…')}return lines}
+function draw(cv,k){
+  const[W,H]=LAY[st.ly],P=st.th>=10?PT[st.th-10]:null,th=P?[P[0],P[2],P[3],P[4]]:TH[st.th],s=st.birth?stats():{y:0,m:0,d:0,days:0,pct:0,nb:new Date()};
+  cv.width=W*k;cv.height=H*k;const c=cv.getContext('2d');c.scale(k,k);
+  const g=c.createLinearGradient(0,0,W,H);if(P){g.addColorStop(0,P[0]);g.addColorStop(.5,P[1]);g.addColorStop(1,P[2])}else{g.addColorStop(0,th[0]);g.addColorStop(1,th[1])}c.fillStyle=g;c.fillRect(0,0,W,H);
+  const R=Math.min(W,H);c.globalAlpha=.1;c.fillStyle=th[2];c.beginPath();c.arc(W*.92,H*.08,R*.38,0,7);c.fill();c.beginPath();c.arc(W*.04,H*.96,R*.3,0,7);c.fill();c.globalAlpha=1;
+  const u=H>W?W/1080:H/1080;if(P)fx(c,W,H,R,P,u);const cx=W/2,y0=(H-980*u)/2,ff=P?'"Playfair Display","Tiro Bangla","Noto Serif Bengali",Georgia,serif':'"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif';
+  c.textAlign='center';c.textBaseline='alphabetic';
+  const T_=(t,sz,w,y,col,x=cx,a=1)=>{c.font=`${w} ${sz*u}px ${ff}`;c.fillStyle=col;c.globalAlpha=a;if(P&&P[6]){c.shadowColor=P[4];c.shadowBlur=26*u}c.fillText(t,x,y0+y*u);c.shadowBlur=0;c.globalAlpha=1};
+  if(P){c.save();c.strokeStyle=th[3];c.fillStyle=th[3];c.globalAlpha=.75;c.lineWidth=2*u;const oy=y0+78*u;for(const d of[-1,1]){c.beginPath();c.moveTo(cx+d*40*u,oy);c.lineTo(cx+d*300*u,oy);c.stroke()}c.translate(cx,oy);c.rotate(Math.PI/4);c.fillRect(-9*u,-9*u,18*u,18*u);c.restore();c.save();c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.roundRect(cx-440*u,y0+585*u,880*u,200*u,34*u);c.fill();c.globalAlpha=.55;c.strokeStyle=th[3];c.lineWidth=2*u;c.stroke();c.restore()}
+if(P&&st.lang==='en')c.letterSpacing=(12*u)+'px';T_(tr('cT'),34,700,40,th[3]);c.letterSpacing='0px';
+  if(st.name)T_(st.name,60,600,115,th[2]);
+  let fg=th[2];if(P){fg=c.createLinearGradient(0,y0+150*u,0,y0+400*u);fg.addColorStop(0,th[2]);fg.addColorStop(1,th[3])}T_(f(s.y),300,700,390,fg);
+  T_(tr('y'),58,600,465,th[3]);
+  T_(`${f(s.m)} ${tr('m')} ${f(s.d)} ${tr('d')}`,44,500,535,th[2],cx,.9);
+  T_(f(s.days),72,700,650,th[2],cx-230*u);T_(tr('lived'),30,500,695,th[3],cx-230*u);
+  T_(s.pct.toLocaleString(loc(),{maximumFractionDigits:1})+'%',72,700,650,th[2],cx+230*u);T_(`${tr('of')} ${tr('done')}`,30,500,695,th[3],cx+230*u);
+  const bw=760*u,bx=cx-bw/2,by=y0+735*u,bh=22*u;
+  c.globalAlpha=.25;c.fillStyle=th[2];c.beginPath();c.roundRect(bx,by,bw,bh,bh/2);c.fill();c.globalAlpha=1;
+  c.fillStyle=th[3];c.beginPath();c.roundRect(bx,by,Math.max(bh,bw*s.pct/100),bh,bh/2);c.fill();
+  T_(`${tr('nbc')}: ${fd(s.nb)}`,38,500,830,th[2],cx,.95);
+  const q=$('#qt').value.trim()||tr('dq');c.font=`italic 500 ${42*u}px ${ff}`;c.fillStyle=th[2];
+  wrap(c,'“'+q+'”',860*u,2).forEach((l,i)=>{c.globalAlpha=.9;c.fillText(l,cx,y0+905*u+i*56*u);c.globalAlpha=1});
+  T_('Life Calculator • private',26,500,985,th[3],cx,.8);
+}
+function drawPrev(){draw($('#cv'),.5)}
+async function exp(type){
+  if(!st.birth)return;const cv=document.createElement('canvas');draw(cv,2);
+  const mime=type==='png'?'image/png':'image/jpeg';
+  cv.toBlob(async b=>{
+    const name=`life-card.${type}`;
+    try{const dl=await window.claude?.use?.('downloads');
+      if(dl){await dl.save({filename:name,data:b});toast(tr('saved'));return}
+    }catch(e){if(e&&e.code==='declined')return;toast(tr('fail'));return}
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();toast(tr('saved'));
+  },mime,.95);
+}
+$('#png').onclick=()=>exp('png');$('#jpg').onclick=()=>exp('jpg');
+
+
+const PT=[['#2b1a05','#7a5410','#1a1003','#fff4d6','#f5c542','lines',1],['#0b132b','#1c2d5a','#0b132b','#eaf6ff','#7fd6ff','stars',1],['#12002b','#3b0a6e','#05000f','#ffffff','#ff2bd6','stars',1],['#3a1c24','#b76e79','#4a2530','#fff0ee','#ffd0c4','rings',0],['#02221a','#0b6b50','#01110d','#e6fff5','#e3c76b','lines',0],['#021428','#0a7a6a','#3a1d7a','#ffffff','#8bffd9','stars',1],['#050505','#1a1a1f','#000000','#ffffff','#e5e5ea','dots',0],['#2a0008','#8f0f2a','#16000a','#ffe9ec','#ffb3c0','rings',0],['#0a0220','#2a1a6e','#000000','#ffffff','#ffd36b','stars',1],['#ff9a5a','#ff5fa2','#7a5cff','#ffffff','#fff3b0','rings',0]];
+const PRICE=20,AH='b570ac1227437e67a2c0839524f8abfffea406e9b036153c84dd5c4df9e7c06e';
+Object.assign(T.bn,{PN:['রয়্যাল গোল্ড','ডায়মন্ড','নিয়ন নাইট','রোজ গোল্ড','এমারেল্ড লাক্স','অরোরা','অবসিডিয়ান','স্কারলেট ভেলভেট','কসমিক গ্যালাক্সি','হলো সানরাইজ'],prem:'👑 প্রিমিয়াম • প্রতিটি ৳20',buy:'👑 এই থিম কিনুন ৳20',shopT:'👑 প্রিমিয়াম থিম কিনুন',tot:'মোট',bkL:'বিকাশ নাম্বার (Send Money)',cp:'কপি',cpd:'কপি হয়েছে!',stp:'১) নাম্বারটি কপি করে টাকা পাঠান। ২) নিচে আপনার বিকাশ নাম্বার ও TrxID দিন।',snL:'যে নাম্বার থেকে টাকা পাঠিয়েছেন',trxL:'Trx ID',sub:'অর্ডার জমা দিন',ordOk:'অর্ডার জমা হয়েছে! এডমিন যাচাই করলে থিম আনলক হবে।',ordBad:'১১ ডিজিটের নাম্বার, Trx ID এবং অন্তত একটি থিম দিন।',needDb:'সরাসরি অর্ডার জমা দিতে claude.ai-তে সাইন-ইন লাগবে। এখন অর্ডারের তথ্য কপি হবে — এডমিনকে পাঠান।',uidL:'আপনার ID (এডমিনকে দিন)',wrong:'ভুল পাসওয়ার্ড',calcFirst:'আগে হিসাব করুন',imgT:'কার্ড তৈরি!',imgH:'ছবিটি চেপে ধরে “Save to Photos / ছবি সংরক্ষণ” দিন, অথবা নিচের বাটন ব্যবহার করুন।',shr:'📲 শেয়ার / গ্যালারিতে সেভ',dl:'⬇ ডাউনলোড',noShare:'এই ডিভাইসে শেয়ার নেই — ছবিটি চেপে ধরে সেভ করুন',own:'আনলকড'});
+Object.assign(T.en,{PN:['Royal Gold','Diamond','Neon Night','Rose Gold','Emerald Luxe','Aurora','Obsidian','Scarlet Velvet','Cosmic Galaxy','Holo Sunrise'],prem:'👑 Premium • ৳20 each',buy:'👑 Buy this theme ৳20',shopT:'👑 Buy premium themes',tot:'Total',bkL:'bKash number (Send Money)',cp:'Copy',cpd:'Copied!',stp:'1) Copy the number and send money. 2) Enter your bKash number & TrxID below.',snL:'Number you sent money from',trxL:'Trx ID',sub:'Submit order',ordOk:'Order submitted! Themes unlock once the admin verifies.',ordBad:'Enter an 11-digit number, a Trx ID and at least one theme.',needDb:'Direct orders need a claude.ai sign-in. Order details will be copied — send them to the admin.',uidL:'Your ID (give to admin)',wrong:'Wrong password',calcFirst:'Calculate first',imgT:'Card ready!',imgH:'Press and hold the image and choose “Save to Photos”, or use the buttons below.',shr:'📲 Share / Save to gallery',dl:'⬇ Download',noShare:'Sharing unavailable — press and hold the image to save',own:'Unlocked'});
+st.premium=false;st.admin=false;st.bk='';st.user=null;
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const owned=i=>i<10||st.admin||st.premium;
+function rnd(a){return()=>(a=(a*16807)%2147483647)/2147483647}
+function fx(c,W,H,R,P,u){const ac=P[4],r=rnd(7+W),p=P[5];c.save();
+ let g=c.createRadialGradient(W*.5,H*.18,0,W*.5,H*.18,R*.9);g.addColorStop(0,ac);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.28;c.fillStyle=g;c.fillRect(0,0,W,H);
+ g=c.createRadialGradient(W*.1,H*.92,0,W*.1,H*.92,R*.7);g.addColorStop(0,P[1]);g.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.5;c.fillStyle=g;c.fillRect(0,0,W,H);
+ g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.45,'rgba(255,255,255,.16)');g.addColorStop(.55,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,.07)');c.globalAlpha=1;c.fillStyle=g;c.fillRect(0,0,W,H);
+ c.strokeStyle=ac;c.fillStyle=ac;
+ if(p==='lines'){c.globalAlpha=.07;c.lineWidth=2*u;for(let i=-H;i<W;i+=40*u){c.beginPath();c.moveTo(i,0);c.lineTo(i+H,H);c.stroke()}}
+ if(p==='rings'){c.globalAlpha=.16;c.lineWidth=2*u;for(let i=1;i<=7;i++){c.beginPath();c.arc(W*.95,H*.05,i*R*.13,0,7);c.stroke();c.beginPath();c.arc(W*.05,H*.95,i*R*.1,0,7);c.stroke()}}
+ if(p==='stars'||p==='dots'){for(let i=0;i<(p==='stars'?110:70);i++){const x=r()*W,y=r()*H,z=(r()*2.2+.6)*u;c.globalAlpha=.25+r()*.6;c.beginPath();c.arc(x,y,z,0,7);c.fill();if(p==='stars'&&i%9===0){c.globalAlpha=.6;c.fillRect(x-7*u,y-.6*u,14*u,1.2*u);c.fillRect(x-.6*u,y-7*u,1.2*u,14*u)}}}
+ c.globalAlpha=.9;c.lineWidth=3*u;c.strokeRect(30*u,30*u,W-60*u,H-60*u);c.globalAlpha=.35;c.lineWidth=1.5*u;c.strokeRect(46*u,46*u,W-92*u,H-92*u);c.restore()}
+
+function buildStudioUI(){
+  const sw=$('#sw');sw.innerHTML='';
+  TH.forEach((t,i)=>{const b=document.createElement('button');b.style.background=`linear-gradient(135deg,${t[0]},${t[1]})`;b.title=tr('TH')[i];b.className=i===st.th?'on':'';b.onclick=()=>{st.th=i;buildStudioUI();drawPrev()};sw.appendChild(b)});
+  const h=document.createElement('div');h.className='pb2';h.textContent=tr('prem');sw.appendChild(h);
+  PT.forEach((t,j)=>{const i=10+j,b=document.createElement('button');b.style.background=`linear-gradient(135deg,${t[0]},${t[1]} 55%,${t[2]})`;b.title=tr('PN')[j];b.textContent=owned(i)?'✓':'🔒';b.className='pr '+(i===st.th?'on':'');b.onclick=()=>{st.th=i;buildStudioUI();drawPrev()};sw.appendChild(b)});
+  if(st.th>=10&&!owned(st.th)){const b=document.createElement('button');b.className='btn';b.style.cssText='flex-basis:100%;padding:11px;font-size:16px';b.textContent=tr('buy');b.onclick=()=>openShop(st.th);sw.appendChild(b)}
+  const sg=$('#sg');sg.innerHTML='';tr('L').forEach((l,i)=>{const b=document.createElement('button');b.textContent=`${l} ${LAY[i][0]}×${LAY[i][1]}`.replace(/\d+/g,x=>f(+x));b.className=i===st.ly?'on':'';b.onclick=()=>{st.ly=i;buildStudioUI();drawPrev()};sg.appendChild(b)});
+}
+function openM(h){$('#mb2').innerHTML=h;$('#ov').classList.remove('hide')}
+function closeM(){$('#ov').classList.add('hide');$('#mb2').innerHTML=''}
+$('#ov').onclick=e=>{if(e.target.id==='ov')closeM()};
+async function cpy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}toast(tr('cpd'))}
+
+Object.assign(T.bn,{prem:'👑 প্রিমিয়াম • ১০টি থিম একসাথে মাত্র ৳২০',buy:'👑 ১০টি প্রিমিয়াম থিম আনলক ৳২০',shopT:'👑 সব প্রিমিয়াম থিম আনলক',all10:'১০টি থিম • একবার কিনলেই সব',login:'লগইন',signup:'সাইন আপ',nm:'আপনার নাম',idL:'মোবাইল নাম্বার অথবা ইমেইল',pw:'পাসওয়ার্ড (কমপক্ষে ৬)',logout:'লগআউট',noAcc:'অ্যাকাউন্ট নেই? সাইন আপ করুন',haveAcc:'অ্যাকাউন্ট আছে? লগইন করুন',needLogin:'আগে লগইন করুন',fbErr:'সমস্যা হয়েছে',acc:'আমার অ্যাকাউন্ট',stm:{pending:'অপেক্ষমাণ',approved:'অনুমোদিত',rejected:'বাতিল'},ordSt:'অর্ডারের অবস্থা',prm:'প্রিমিয়াম সক্রিয় ✓',ordOk:'অর্ডার জমা হয়েছে! এডমিন যাচাই করলে সব থিম আনলক হবে।'});
+Object.assign(T.en,{prem:'👑 Premium • all 10 themes for just ৳20',buy:'👑 Unlock all 10 premium themes ৳20',shopT:'👑 Unlock all premium themes',all10:'10 themes • buy once, get all',login:'Login',signup:'Sign up',nm:'Your name',idL:'Mobile number or email',pw:'Password (min 6)',logout:'Logout',noAcc:'No account? Sign up',haveAcc:'Have an account? Login',needLogin:'Please login first',fbErr:'Something went wrong',acc:'My account',stm:{pending:'Pending',approved:'Approved',rejected:'Rejected'},ordSt:'Order status',prm:'Premium active ✓',ordOk:'Order submitted! All themes unlock once the admin verifies.'});
+const FB={apiKey:"AIzaSyBywVa7AbxmfmbmI4n5nySE3LiaG6GVKvw",authDomain:"life-calculator-69835.firebaseapp.com",projectId:"life-calculator-69835",storageBucket:"life-calculator-69835.firebasestorage.app",messagingSenderId:"791620560110",appId:"1:791620560110:web:e76d7a0141b1d3c5577fff"};
+let auth=null,fs=null,unU=null;
+try{firebase.initializeApp(FB);auth=firebase.auth();fs=firebase.firestore()}catch(e){console.error(e)}
+const emailOf=x=>{x=x.trim();const d=x.replace(/\D/g,'');return(!x.includes('@')&&/^01\d{9}$/.test(d))?d+'@phone.lifecalc.app':x.toLowerCase()};
+const au=document.createElement('button');au.className='tbtn';au.id='au';$('.tools').prepend(au);
+au.onclick=()=>st.user?openAcc():openAuth('in');
+function hdr(){au.textContent=st.user?'👤 '+((st.user.displayName||'').split(' ')[0]||'ID'):tr('login')}
+const _al=applyLang;applyLang=function(){_al();hdr()};
+function openAuth(mode){
+  openM(`<h2>${mode==='in'?tr('login'):tr('signup')}</h2>${mode==='up'?`<label>${tr('nm')}</label><input id="an" maxlength="30">`:''}<label style="margin-top:10px">${tr('idL')}</label><input id="ai" autocapitalize="none" placeholder="01XXXXXXXXX / name@mail.com"><label style="margin-top:10px">${tr('pw')}</label><input id="ap2" type="password"><div class="err" id="ae"></div><button class="btn" id="ago" style="width:100%">${mode==='in'?tr('login'):tr('signup')}</button><p style="text-align:center"><a id="sw2" style="color:var(--br);font-weight:700;cursor:pointer">${mode==='in'?tr('noAcc'):tr('haveAcc')}</a></p>`);
+  $('#sw2').onclick=()=>openAuth(mode==='in'?'up':'in');
+  $('#ago').onclick=async()=>{const id=$('#ai').value,pw=$('#ap2').value,em=emailOf(id),nm=mode==='up'?$('#an').value.trim():'';
+    if(!auth){$('#ae').textContent=tr('fbErr');return}
+    if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<6||(mode==='up'&&!nm)){$('#ae').textContent=tr('ordBad');return}
+    try{if(mode==='up'){const c=await auth.createUserWithEmailAndPassword(em,pw);await c.user.updateProfile({displayName:nm});await fs.doc('users/'+c.user.uid).set({name:nm,login:id.trim(),premium:false,at:Date.now()})}else await auth.signInWithEmailAndPassword(em,pw);closeM()}catch(e){$('#ae').textContent=tr('fbErr')+' ('+(e.code||e.message)+')'}};
+}
+function openAcc(){openM(`<h2>${tr('acc')}</h2><p><b>${esc(st.user.displayName)}</b><br><span class="mut">${esc((st.user.email||'').replace('@phone.lifecalc.app',''))}</span></p><p>${st.premium?tr('prm'):''}</p><button class="btn alt" id="lo" style="width:100%">${tr('logout')}</button>`);$('#lo').onclick=async()=>{await auth.signOut();closeM()}}
+if(auth){auth.onAuthStateChanged(u=>{st.user=u;st.premium=false;if(unU){unU();unU=null}hdr();buildStudioUI();if(u&&fs)unU=fs.doc('users/'+u.uid).onSnapshot(sn=>{st.premium=!!(sn.exists&&sn.data().premium);buildStudioUI()},()=>{})});
+  fs.doc('settings/pay').onSnapshot(sn=>{if(sn.exists)st.bk=String(sn.data().bkash||'')},()=>{})}
+hdr();
+
+async function openShop(){
+  if(!st.user){toast(tr('needLogin'));return openAuth('in')}
+  const P=tr('PN');
+  openM(`<h2>${tr('shopT')}</h2><div class="pl">${PT.map((p,j)=>`<div class="pi"><span class="sd" style="background:linear-gradient(135deg,${p[0]},${p[1]},${p[2]})"></span>${P[j]}</div>`).join('')}</div>
+  <div style="text-align:center"><span class="mut">${tr('all10')}</span><div style="font-size:36px;font-weight:700;color:var(--br)">৳${f(20)}</div></div>
+  <div class="bkb"><span>${tr('bkL')}</span><b>${esc(st.bk)||'—'}</b><button class="sm" id="bc">${tr('cp')}</button></div>
+  <p class="mut">${tr('stp')}</p>
+  <label>${tr('snL')}</label><input id="sn" inputmode="numeric" maxlength="14" placeholder="01XXXXXXXXX">
+  <label style="margin-top:10px">${tr('trxL')}</label><input id="tx" maxlength="20" placeholder="8N7A6D5EXX" style="text-transform:uppercase">
+  <div class="err" id="oe"></div><button class="btn" id="os" style="width:100%">${tr('sub')}</button><p class="mut" id="ost"></p>`);
+  $('#bc').onclick=()=>st.bk&&cpy(st.bk);
+  fs.doc('orders/'+st.user.uid).get().then(d=>{if(d.exists&&$('#ost'))$('#ost').textContent=tr('ordSt')+': '+tr('stm')[d.data().status]}).catch(()=>{});
+  $('#os').onclick=async()=>{const sn=$('#sn').value.replace(/\D/g,''),tx=$('#tx').value.trim().toUpperCase();
+    if(!/^01\d{9}$/.test(sn)||tx.length<6){$('#oe').textContent=tr('ordBad');return}
+    try{await fs.doc('orders/'+st.user.uid).set({uid:st.user.uid,name:st.user.displayName||'',sender:sn,trx:tx,total:PRICE,status:'pending',at:Date.now()});$('#oe').style.color='#16a34a';$('#oe').textContent=tr('ordOk')}catch(e){$('#oe').textContent=(e.code||e.message)}};
+}
+async function sha(x){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(x));return[...new Uint8Array(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}
+function openAdmin(){
+  if(st.admin)return adminPanel();
+  openM(`<h2>🔐 এডমিন লগইন</h2><input type="password" id="ap" placeholder="পাসওয়ার্ড"><div class="err" id="ae"></div><button class="btn" id="al" style="width:100%">প্রবেশ করুন</button>`);
+  const go=async()=>{let ok=false;try{ok=await sha($('#ap').value)===AH}catch(e){}if(ok){st.admin=true;buildStudioUI();adminPanel()}else $('#ae').textContent=tr('wrong')};
+  $('#al').onclick=go;$('#ap').onkeydown=e=>{if(e.key==='Enter')go()};$('#ap').focus();
+}
+async function adminPanel(){
+  openM(`<h2>⚙️ এডমিন প্যানেল</h2>${st.user?'':'<div class="err">অর্ডার দেখতে/অনুমোদন দিতে আপনার এডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।</div>'}
+  <label>বিকাশ নাম্বার (গ্রাহক কপি করবে)</label><div class="row2"><input id="ab" value="${esc(st.bk)}" inputmode="numeric"><button class="sm" id="asv">সেভ</button></div>
+  <h3>অর্ডার</h3><div id="ol" class="mut">লোড হচ্ছে…</div>
+  <h3>ম্যানুয়াল এক্সেস</h3><input id="gu" placeholder="গ্রাহকের UID"><div class="row" style="margin-top:8px"><button class="sm ok" id="ga">প্রিমিয়াম দিন</button><button class="sm no" id="gr">বাতিল করুন</button></div>`);
+  const run=async fn=>{try{await fn();toast('✓')}catch(e){toast(e.code||e.message)}};
+  $('#asv').onclick=()=>run(async()=>{await fs.doc('settings/pay').set({bkash:$('#ab').value.trim()});st.bk=$('#ab').value.trim()});
+  $('#ga').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:true},{merge:true}));
+  $('#gr').onclick=()=>run(()=>fs.doc('users/'+$('#gu').value.trim()).set({premium:false},{merge:true}));
+  async function load(){try{const q=await fs.collection('orders').orderBy('at','desc').limit(100).get(),ds=q.docs.map(d=>d.data());
+    $('#ol').innerHTML=ds.length?ds.map(o=>`<div class="od"><b>${esc(o.name)||'—'}</b> • ৳${o.total} • <b>${esc(o.status)}</b><br>নাম্বার: ${esc(o.sender)} • Trx: <b>${esc(o.trx)}</b><br>UID: ${esc(o.uid)}<div class="row" style="margin-top:8px"><button class="sm ok" data-a="ok" data-u="${esc(o.uid)}">অনুমোদন</button><button class="sm no" data-a="no" data-u="${esc(o.uid)}">বাতিল</button></div></div>`).join(''):'কোনো অর্ডার নেই'}catch(e){$('#ol').textContent=(e.code||e.message)}}
+  $('#ol').onclick=e=>{const b=e.target.closest('button');if(!b)return;const u=b.dataset.u;run(async()=>{if(b.dataset.a==='ok'){await fs.doc('users/'+u).set({premium:true},{merge:true});await fs.doc('orders/'+u).update({status:'approved'})}else{await fs.doc('users/'+u).set({premium:false},{merge:true});await fs.doc('orders/'+u).update({status:'rejected'})}load()})};
+  if(fs)load();
+}
+$('#mbk').onclick=openAdmin;$('#mbk').onkeydown=e=>{if(e.key==='Enter')openAdmin()};
+
+async function exp(type){
+  if(!st.birth)return toast(tr('calcFirst'));
+  if(!owned(st.th))return openShop();
+  const cv=document.createElement('canvas');draw(cv,2);const mime=type==='png'?'image/png':'image/jpeg',name=`life-card.${type}`;
+  cv.toBlob(b=>{const url=URL.createObjectURL(b),fl=new File([b],name,{type:mime});
+    openM(`<h2>✅ ${tr('imgT')}</h2><p class="mut">${tr('imgH')}</p><img class="ex" alt="card" src="${url}"><div class="row"><button class="btn" id="sh">${tr('shr')}</button><button class="btn alt" id="dl">${tr('dl')}</button></div>`);
+    $('#sh').onclick=async()=>{try{if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl]});return}}catch(e){if(e&&e.name==='AbortError')return}toast(tr('noShare'))};
+    $('#dl').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()};
+  },mime,.95);
+}
+st.lang=load('lc-lang')||'bn';
+setMode(load('lc-mode')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+applyLang();
+if(document.fonts)Promise.all([400,500,600,700].map(w=>document.fonts.load(`${w} 20px "Hind Siliguri"`,'আঅabc')).concat([document.fonts.load('700 20px "Playfair Display"','Aa'),document.fonts.load('italic 500 20px "Playfair Display"','Aa'),document.fonts.load('700 20px "Tiro Bangla"','আ'),document.fonts.load('italic 400 20px "Tiro Bangla"','আ')])).then(drawPrev).catch(()=>{});
+</script>
+</body>
+</html>
